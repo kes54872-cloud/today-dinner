@@ -49,13 +49,18 @@ export const formatQty = (item) => {
 
 export const cx = (...parts) => parts.filter(Boolean).join(' ')
 
-// 메뉴가 쓰는 재료 중 지금 냉장고에 있는 것의 개수
+// 메뉴가 특정 재료(이름)를 쓰는지 — fridgeUse 목록 + 재료 표기 텍스트까지 확인
+export const menuUsesIngredient = (menu, name) => {
+  if (!name) return false
+  const hit = (n) => n === name || n.includes(name) || name.includes(n)
+  if (menu.fridgeUse?.some(hit)) return true
+  return (menu.ingredients ?? []).some((ing) => ing.includes(name))
+}
+
+// 메뉴가 쓰는 재료 중 지금 냉장고에 있는 것의 개수 (직접 추가한 재료도 반영)
 export const fridgeMatchCount = (menu, fridge) => {
-  if (!menu?.fridgeUse?.length || !fridge?.length) return 0
-  const names = fridge.map((f) => f.name)
-  return menu.fridgeUse.filter((n) =>
-    names.some((fn) => n === fn || n.includes(fn) || fn.includes(n)),
-  ).length
+  if (!fridge?.length) return 0
+  return fridge.filter((f) => menuUsesIngredient(menu, f.name)).length
 }
 
 // 추천 이유 — 실제 냉장고 상태에 맞춰 "냉장고" 문구를 보정

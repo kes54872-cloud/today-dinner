@@ -4,7 +4,11 @@ import { PageContainer } from '../components/layout'
 import { BottomSheet } from '../components/overlays'
 import { Button, Chip, EmptyState, Icon } from '../components/ui'
 import { cx, defaultQty, formatQty, qtyPresets, qtyStep } from '../lib/format'
-import { FRIDGE_CATEGORIES, INGREDIENT_CATALOG } from '../data/mock'
+import {
+  CUSTOM_UNITS,
+  FRIDGE_CATEGORIES,
+  INGREDIENT_CATALOG,
+} from '../data/mock'
 import { useApp } from '../store/AppStore'
 
 /* ── 수량 입력 (−/+ 스텝 + 직접 입력 + 빠른 선택) ─────*/
@@ -82,12 +86,26 @@ function AddIngredientSheet({ open, onClose }) {
     setTimeout(reset, 200)
   }
 
+  const q = query.trim()
   const results = useMemo(() => {
     const inFridge = new Set(fridge.map((f) => f.id))
     return INGREDIENT_CATALOG.filter(
-      (i) => !inFridge.has(i.id) && (!query || i.name.includes(query)),
+      (i) => !inFridge.has(i.id) && (!q || i.name.includes(q)),
     ).slice(0, 12)
-  }, [fridge, query])
+  }, [fridge, q])
+  const canAddCustom = q && !results.some((i) => i.name === q)
+
+  const pickCustom = () => {
+    setPicked({
+      id: 'custom-' + q,
+      name: q,
+      category: '기타',
+      unit: '개',
+      custom: true,
+    })
+    setCount(1)
+    setStep(2)
+  }
 
   return (
     <BottomSheet
@@ -121,17 +139,12 @@ function AddIngredientSheet({ open, onClose }) {
               autoFocus
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              placeholder="재료 검색"
+              placeholder="재료 검색 · 없으면 직접 입력"
               className="w-full bg-transparent text-sm outline-none placeholder:text-muted"
             />
           </label>
-          {results.length === 0 ? (
-            <p className="py-8 text-center text-sm text-muted">
-              "{query}" 는 목록에 없어요.
-              <br />
-              검색어를 바꿔보세요.
-            </p>
-          ) : (
+
+          {results.length > 0 && (
             <ul className="grid grid-cols-2 gap-2">
               {results.map((i) => (
                 <li key={i.id}>
@@ -152,14 +165,66 @@ function AddIngredientSheet({ open, onClose }) {
               ))}
             </ul>
           )}
+
+          {canAddCustom && (
+            <button
+              onClick={pickCustom}
+              className="flex w-full items-center gap-2 rounded-xl border border-primary bg-primary-soft/50 px-3.5 py-3 text-left text-sm font-medium text-primary"
+            >
+              <Icon name="plus" size={16} />"{q}" 직접 추가하기
+            </button>
+          )}
+
+          {!q && results.length === 0 && (
+            <p className="py-6 text-center text-sm text-muted">
+              재료 이름을 입력해 보세요.
+            </p>
+          )}
         </div>
       ) : (
         <div className="space-y-5 py-2">
+          {picked?.custom && (
+            <div className="space-y-3">
+              <div>
+                <p className="mb-1.5 text-xs font-semibold text-muted">단위</p>
+                <div className="flex flex-wrap gap-1.5">
+                  {CUSTOM_UNITS.map((u) => (
+                    <Chip
+                      key={u}
+                      active={picked.unit === u}
+                      onClick={() => {
+                        setPicked((p) => ({ ...p, unit: u }))
+                        setCount(defaultQty(u))
+                      }}
+                    >
+                      {u}
+                    </Chip>
+                  ))}
+                </div>
+              </div>
+              <div>
+                <p className="mb-1.5 text-xs font-semibold text-muted">분류</p>
+                <div className="flex flex-wrap gap-1.5">
+                  {FRIDGE_CATEGORIES.map((c) => (
+                    <Chip
+                      key={c}
+                      active={picked.category === c}
+                      onClick={() => setPicked((p) => ({ ...p, category: c }))}
+                    >
+                      {c}
+                    </Chip>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
+
           <QuantityField
             unit={picked?.unit}
             value={count}
             onChange={setCount}
           />
+
           <button
             type="button"
             onClick={() => {

@@ -2,7 +2,7 @@ import { useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { PageContainer } from '../components/layout'
 import { Button, EmptyState, Icon, ProgressBar } from '../components/ui'
-import { minutes, cx } from '../lib/format'
+import { minutes, cx, menuUsesIngredient } from '../lib/format'
 import { MENUS } from '../data/mock'
 import { useApp } from '../store/AppStore'
 export default function FridgeClear() {
@@ -10,12 +10,11 @@ export default function FridgeClear() {
   const total = fridge.length
   // 냉장고 재료를 많이 쓰는 순으로
   const ranked = useMemo(() => {
-    const names = new Set(fridge.map((f) => f.name))
     return MENUS.map((m) => {
-      const used = m.fridgeUse.filter((n) =>
-        [...names].some((fn) => n === fn || n.includes(fn) || fn.includes(n)),
-      )
-      return { ...m, usedCount: used.length, buyCount: m.buyExtra.length }
+      const usedCount = fridge.filter((f) =>
+        menuUsesIngredient(m, f.name),
+      ).length
+      return { ...m, usedCount, buyCount: m.buyExtra.length }
     })
       .filter((m) => m.usedCount > 0)
       .sort((a, b) => b.usedCount - a.usedCount || a.buyCount - b.buyCount)

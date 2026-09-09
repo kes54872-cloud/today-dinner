@@ -70,8 +70,7 @@ export default function MenuDetail() {
       </PageContainer>
     )
   }
-  const inFridge = (name) =>
-    fridge.some((f) => f.name === name || name.includes(f.name))
+  const inFridge = (ing) => fridge.some((f) => ing.includes(f.name))
   return (
     <PageContainer width="narrow">
       <BackBtn onClick={() => navigate(-1)} />
@@ -117,14 +116,13 @@ export default function MenuDetail() {
             <h2 className="mb-2 text-sm font-bold text-ink">재료</h2>
             <ul className="divide-y divide-line rounded-2xl border border-line">
               {menu.ingredients.map((ing) => {
-                const nameOnly = ing.split(' ')[0]
                 return (
                   <li
                     key={ing}
                     className="flex items-center justify-between px-3.5 py-2.5 text-sm"
                   >
                     <span className="text-ink">{ing}</span>
-                    {inFridge(nameOnly) ? (
+                    {inFridge(ing) ? (
                       <span className="text-xs font-medium text-ok">보유</span>
                     ) : (
                       <span className="text-xs text-muted">구매</span>
