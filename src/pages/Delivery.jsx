@@ -4,7 +4,6 @@ import { PageContainer } from '../components/layout'
 import { DeliveryCard } from '../components/cards'
 import { Chip, EmptyState, Icon, SegmentedControl } from '../components/ui'
 import { DELIVERY } from '../data/mock'
-
 const GENRES = [
   { key: '밥', emoji: '🍚' },
   { key: '면', emoji: '🍜' },
@@ -13,11 +12,9 @@ const GENRES = [
   { key: '국물', emoji: '🥘' },
   { key: '매운맛', emoji: '🌶️' },
 ]
-
 export default function Delivery() {
   const [kind, setKind] = useState('전체')
   const [genre, setGenre] = useState(null)
-
   const list = useMemo(
     () =>
       DELIVERY.filter(
@@ -26,17 +23,20 @@ export default function Delivery() {
       ).sort((a, b) => b.match - a.match),
     [kind, genre],
   )
-
   return (
     <PageContainer width="narrow">
-      <Link to="/" className="mb-3 inline-flex items-center gap-1 text-sm text-muted hover:text-ink">
+      <Link
+        to="/"
+        className="mb-3 inline-flex items-center gap-1 text-sm text-muted hover:text-ink"
+      >
         <Icon name="back" size={16} /> 홈
       </Link>
       <h1 className="text-2xl font-extrabold text-ink md:text-3xl">
         오늘은 요리하지 않을래요.
       </h1>
-      <p className="mt-1.5 text-sm text-muted">취향에 맞는 배달·포장·외식을 골라봤어요.</p>
-
+      <p className="mt-1.5 text-sm text-muted">
+        취향에 맞는 배달·포장·외식을 골라봤어요.
+      </p>
       <div className="mt-5">
         <SegmentedControl
           options={['전체', '배달', '포장', '외식']}
@@ -44,7 +44,6 @@ export default function Delivery() {
           onChange={setKind}
         />
       </div>
-
       <div className="no-scrollbar -mx-4 mt-3 flex gap-2 overflow-x-auto px-4 pb-1">
         {GENRES.map((g) => (
           <Chip
@@ -56,11 +55,9 @@ export default function Delivery() {
           </Chip>
         ))}
       </div>
-
       {list.length === 0 ? (
         <div className="mt-8">
           <EmptyState
-            icon="🛵"
             title="조건에 맞는 곳이 없어요"
             description="필터를 조금 넓혀보세요."
           />

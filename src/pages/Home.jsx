@@ -1,7 +1,11 @@
 import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { PageContainer } from '../components/layout'
-import { MenuCard, RecommendationCard, RecommendationReason } from '../components/cards'
+import {
+  MenuCard,
+  RecommendationCard,
+  RecommendationReason,
+} from '../components/cards'
 import { SectionHead, SkeletonCard, Icon } from '../components/ui'
 import { MENUS, INGREDIENT_CATALOG } from '../data/mock'
 import { explainReasons } from '../lib/format'
@@ -17,7 +21,14 @@ const MODES = [
 function QuickAsk() {
   const { fridge, addIngredient, removeIngredient, toast } = useApp()
   // 냉장고에 아직 없는 흔한 재료 중 하나를 물어봄
-  const candidates = ['tofu', 'chicken', 'cheese', 'tomato', 'mushroom', 'dumpling']
+  const candidates = [
+    'tofu',
+    'chicken',
+    'cheese',
+    'tomato',
+    'mushroom',
+    'dumpling',
+  ]
   const askId = candidates.find((id) => !fridge.some((f) => f.id === id))
   const item = INGREDIENT_CATALOG.find((i) => i.id === askId)
   const [answered, setAnswered] = useState(false)
@@ -70,9 +81,13 @@ export default function Home() {
       {/* Hero */}
       <section className="animate-rise pb-6 pt-2 md:pt-6">
         <h1 className="text-[28px] font-extrabold leading-tight text-ink md:text-[40px]">
-          오늘 저녁은<br />뭐가 먹고 싶어요?
+          오늘 저녁은
+          <br />
+          뭐가 먹고 싶어요?
         </h1>
-        <p className="mt-2 text-sm text-muted md:text-base">지금의 상황을 골라주세요.</p>
+        <p className="mt-2 text-sm text-muted md:text-base">
+          지금의 상황을 골라주세요.
+        </p>
       </section>
 
       {/* Mode selector */}
@@ -88,7 +103,9 @@ export default function Home() {
             className="animate-rise group flex flex-col items-start rounded-[var(--radius-card)] border border-line bg-card p-4 text-left shadow-[var(--shadow-card)] transition-transform hover:-translate-y-1 hover:border-primary/40 active:scale-[0.98] md:p-5"
           >
             <span className="flex w-full items-center justify-between">
-              <span className="text-base font-bold text-ink md:text-lg">{m.title}</span>
+              <span className="text-base font-bold text-ink md:text-lg">
+                {m.title}
+              </span>
               <Icon
                 name="arrowRight"
                 size={18}
@@ -102,7 +119,10 @@ export default function Home() {
 
       {/* 오늘의 추천 */}
       <section className="mt-9">
-        <SectionHead title="오늘의 추천" caption="냉장고와 취향을 반영한 한 그릇" />
+        <SectionHead
+          title="오늘의 추천"
+          caption="냉장고와 취향을 반영한 한 그릇"
+        />
         {loading ? (
           <div className="overflow-hidden rounded-[var(--radius-card)] border border-line bg-card">
             <div className="skeleton aspect-[16/9] w-full" />
@@ -130,7 +150,10 @@ export default function Home() {
         <SectionHead
           title="이런 메뉴는 어때요?"
           right={
-            <Link to="/recommend/cook" className="text-sm font-semibold text-primary">
+            <Link
+              to="/recommend/cook"
+              className="text-sm font-semibold text-primary"
+            >
               더 보기
             </Link>
           }
@@ -147,9 +170,14 @@ export default function Home() {
         to="/fridge"
         className="mt-9 flex items-center gap-3 rounded-[var(--radius-card)] border border-line bg-card p-4 text-sm shadow-[var(--shadow-card)] hover:border-primary/40"
       >
-        <span className="text-2xl" aria-hidden="true">🧊</span>
-        <span className="font-medium text-ink">냉장고를 정리하고 더 정확한 추천 받기</span>
-        <Icon name="chevronRight" size={18} className="ml-auto text-muted" />
+        <span className="font-medium text-ink">
+          냉장고를 정리하고 더 정확한 추천 받기
+        </span>
+        <Icon
+          name="chevronRight"
+          size={18}
+          className="ml-auto shrink-0 text-muted"
+        />
       </Link>
     </PageContainer>
   )

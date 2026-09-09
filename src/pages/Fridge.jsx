@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import { PageContainer } from '../components/layout'
 import { BottomSheet } from '../components/overlays'
 import { Button, Chip, EmptyState, Icon } from '../components/ui'
-import { AMOUNT_OPTIONS, cx } from '../lib/format'
+import { AMOUNT_OPTIONS } from '../lib/format'
 import { FRIDGE_CATEGORIES, INGREDIENT_CATALOG } from '../data/mock'
 import { useApp } from '../store/AppStore'
 
@@ -69,7 +69,9 @@ function AddIngredientSheet({ open, onClose }) {
           </label>
           {results.length === 0 ? (
             <p className="py-8 text-center text-sm text-muted">
-              "{query}" 는 목록에 없어요.<br />검색어를 바꿔보세요.
+              "{query}" 는 목록에 없어요.
+              <br />
+              검색어를 바꿔보세요.
             </p>
           ) : (
             <ul className="grid grid-cols-2 gap-2">
@@ -80,11 +82,8 @@ function AddIngredientSheet({ open, onClose }) {
                       setPicked(i)
                       setStep(2)
                     }}
-                    className="flex w-full items-center gap-2 rounded-xl border border-line bg-card px-3 py-3 text-left text-sm hover:border-primary/50"
+                    className="flex w-full items-center gap-2 rounded-xl border border-line bg-card px-3.5 py-3 text-left text-sm hover:border-primary/50"
                   >
-                    <span className="text-lg" aria-hidden="true">
-                      {i.emoji}
-                    </span>
                     <span className="font-medium text-ink">{i.name}</span>
                     <span className="ml-auto text-muted">
                       <Icon name="plus" size={16} />
@@ -97,10 +96,7 @@ function AddIngredientSheet({ open, onClose }) {
         </div>
       ) : (
         <div className="space-y-4">
-          <div className="flex items-center gap-3 rounded-xl bg-bg px-4 py-3">
-            <span className="text-2xl" aria-hidden="true">
-              {picked?.emoji}
-            </span>
+          <div className="rounded-xl bg-bg px-4 py-3">
             <span className="font-semibold text-ink">{picked?.name}</span>
           </div>
           <div className="grid grid-cols-2 gap-2">
@@ -131,14 +127,20 @@ export default function Fridge() {
   const [sheet, setSheet] = useState(false)
   const [cat, setCat] = useState('전체')
 
-  const cats = ['전체', ...FRIDGE_CATEGORIES.filter((c) => fridge.some((f) => f.category === c))]
-  const shown = cat === '전체' ? fridge : fridge.filter((f) => f.category === cat)
+  const cats = [
+    '전체',
+    ...FRIDGE_CATEGORIES.filter((c) => fridge.some((f) => f.category === c)),
+  ]
+  const shown =
+    cat === '전체' ? fridge : fridge.filter((f) => f.category === cat)
 
   return (
     <PageContainer width="narrow">
       <div className="flex items-start justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-extrabold text-ink md:text-3xl">내 냉장고</h1>
+          <h1 className="text-2xl font-extrabold text-ink md:text-3xl">
+            내 냉장고
+          </h1>
           <p className="mt-1.5 text-sm text-muted">
             지금 있는 재료로 만들 수 있는 메뉴를 찾아보세요.
           </p>
@@ -151,7 +153,6 @@ export default function Fridge() {
       {fridge.length === 0 ? (
         <div className="mt-8">
           <EmptyState
-            icon="🧊"
             title="아직 냉장고가 비어 있어요."
             description="재료를 몇 개만 추가해도 오늘 만들 수 있는 메뉴를 찾아드릴게요."
             action={
@@ -188,24 +189,26 @@ export default function Fridge() {
                 >
                   <Icon name="close" size={15} />
                 </button>
-                <span className="text-2xl" aria-hidden="true">
-                  {f.emoji}
-                </span>
                 <span className="text-sm font-semibold text-ink">{f.name}</span>
-                <span className="num text-xs text-muted">{f.qty || f.amount}</span>
+                <span className="num text-xs text-muted">
+                  {f.qty || f.amount}
+                </span>
               </li>
             ))}
           </ul>
 
           <Link
             to="/fridge/clear"
-            className={cx(
-              'mt-6 flex items-center gap-3 rounded-[var(--radius-card)] border border-line bg-card p-4 text-sm shadow-[var(--shadow-card)] hover:border-primary/40',
-            )}
+            className="mt-6 flex items-center gap-3 rounded-[var(--radius-card)] border border-line bg-card p-4 text-sm shadow-[var(--shadow-card)] hover:border-primary/40"
           >
-            <span className="text-2xl" aria-hidden="true">🧊</span>
-            <span className="font-medium text-ink">냉장고 털기 — 지금 재료를 가장 많이 쓰는 메뉴</span>
-            <Icon name="chevronRight" size={18} className="ml-auto text-muted" />
+            <span className="font-medium text-ink">
+              냉장고 털기 — 지금 재료를 가장 많이 쓰는 메뉴
+            </span>
+            <Icon
+              name="chevronRight"
+              size={18}
+              className="ml-auto shrink-0 text-muted"
+            />
           </Link>
         </>
       )}

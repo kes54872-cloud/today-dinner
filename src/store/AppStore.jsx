@@ -76,7 +76,7 @@ export function AppProvider({ children }) {
         if (f.some((x) => x.id === item.id)) return f
         return [...f, item]
       })
-      toast(`${item.emoji} ${item.name} 추가`)
+      toast(`${item.name} 추가`)
     },
     [toast],
   )

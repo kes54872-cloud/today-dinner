@@ -23,8 +23,8 @@ export function Header() {
   return (
     <header className="sticky top-0 z-40 hidden border-b border-line bg-bg/85 backdrop-blur md:block">
       <div className="mx-auto flex h-16 max-w-[1280px] items-center gap-8 px-8">
-        <NavLink to="/" className="flex items-center gap-2 text-[17px] font-extrabold text-ink">
-          <span aria-hidden="true">🍳</span> 오늘 뭐 먹지?
+        <NavLink to="/" className="text-[17px] font-extrabold text-ink">
+          오늘 뭐 먹지?
         </NavLink>
         <nav className="flex items-center gap-1" aria-label="주요 메뉴">
           {DESKTOP_NAV.map((n) => (
@@ -35,7 +35,9 @@ export function Header() {
               className={({ isActive }) =>
                 cx(
                   'rounded-full px-3.5 py-2 text-sm font-medium transition-colors',
-                  isActive ? 'bg-primary-soft text-primary' : 'text-muted hover:text-ink',
+                  isActive
+                    ? 'bg-primary-soft text-primary'
+                    : 'text-muted hover:text-ink',
                 )
               }
             >
@@ -44,14 +46,20 @@ export function Header() {
           ))}
         </nav>
         <div className="ml-auto flex items-center gap-1">
-          <button aria-label="검색" className="rounded-full p-2 text-muted hover:bg-line/60 hover:text-ink">
+          <button
+            aria-label="검색"
+            className="rounded-full p-2 text-muted hover:bg-line/60 hover:text-ink"
+          >
             <Icon name="search" size={20} />
           </button>
           <NavLink
             to="/saved"
             aria-label="찜한 메뉴"
             className={({ isActive }) =>
-              cx('rounded-full p-2 hover:bg-line/60', isActive ? 'text-primary' : 'text-muted hover:text-ink')
+              cx(
+                'rounded-full p-2 hover:bg-line/60',
+                isActive ? 'text-primary' : 'text-muted hover:text-ink',
+              )
             }
           >
             <Icon name="heart" size={20} />
@@ -61,7 +69,9 @@ export function Header() {
             className={({ isActive }) =>
               cx(
                 'ml-1 rounded-full px-3 py-1.5 text-sm font-semibold',
-                isActive ? 'bg-primary text-white' : 'border border-line-strong text-ink hover:border-ink/40',
+                isActive
+                  ? 'bg-primary text-white'
+                  : 'border border-line-strong text-ink hover:border-ink/40',
               )
             }
           >
@@ -98,7 +108,9 @@ export function MobileBottomNav() {
                     name={n.icon}
                     size={23}
                     strokeWidth={isActive ? 2 : 1.7}
-                    className={isActive && n.icon === 'heart' ? 'fill-primary' : ''}
+                    className={
+                      isActive && n.icon === 'heart' ? 'fill-primary' : ''
+                    }
                   />
                   {n.label}
                 </>

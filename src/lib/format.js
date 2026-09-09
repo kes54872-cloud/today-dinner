@@ -5,11 +5,10 @@ export const won = (n) => `${n.toLocaleString('ko-KR')}원`
 export const minutes = (n) => `${n}분`
 
 // 난이도 1~3 → 별 문자열 (fallback / aria 용)
-export const starText = (level) =>
-  '★★★☆☆☆'.slice(3 - level, 6 - level)
+export const starText = (level) => '★★★☆☆☆'.slice(3 - level, 6 - level)
 
 export const difficultyLabel = (level) =>
-  ({ 1: '쉬움', 2: '보통', 3: '도전' }[level] ?? '보통')
+  ({ 1: '쉬움', 2: '보통', 3: '도전' })[level] ?? '보통'
 
 // 5단계 편식 선호도
 export const PREF_SCALE = [
@@ -43,8 +42,6 @@ export const explainReasons = (menu, fridge) => {
   return (menu.reasons ?? [])
     .filter((r) => count > 0 || !r.includes('냉장고'))
     .map((r) =>
-      count > 0
-        ? r.replace(/냉장고 재료 \d+개/g, `냉장고 재료 ${count}개`)
-        : r,
+      count > 0 ? r.replace(/냉장고 재료 \d+개/g, `냉장고 재료 ${count}개`) : r,
     )
 }

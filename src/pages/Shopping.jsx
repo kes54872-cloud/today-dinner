@@ -23,10 +23,15 @@ export default function Shopping() {
 
   return (
     <PageContainer width="narrow">
-      <Link to="/planner" className="mb-3 inline-flex items-center gap-1 text-sm text-muted hover:text-ink">
+      <Link
+        to="/planner"
+        className="mb-3 inline-flex items-center gap-1 text-sm text-muted hover:text-ink"
+      >
         <Icon name="back" size={16} /> 주간 식단
       </Link>
-      <h1 className="text-2xl font-extrabold text-ink md:text-3xl">이번 주 장보기</h1>
+      <h1 className="text-2xl font-extrabold text-ink md:text-3xl">
+        이번 주 장보기
+      </h1>
       <p className="mt-1.5 text-sm text-muted">
         주간 식단과 냉장고를 비교해 필요한 재료만 골라봤어요.
       </p>
@@ -59,12 +64,19 @@ export default function Shopping() {
                   <span
                     className={cx(
                       'grid h-5 w-5 place-items-center rounded-md border transition-colors',
-                      on ? 'border-primary bg-primary text-white' : 'border-line-strong',
+                      on
+                        ? 'border-primary bg-primary text-white'
+                        : 'border-line-strong',
                     )}
                   >
                     {on && <Icon name="check" size={13} strokeWidth={2.6} />}
                   </span>
-                  <span className={cx('text-sm', on ? 'text-muted line-through' : 'text-ink')}>
+                  <span
+                    className={cx(
+                      'text-sm',
+                      on ? 'text-muted line-through' : 'text-ink',
+                    )}
+                  >
                     {b}
                   </span>
                 </button>

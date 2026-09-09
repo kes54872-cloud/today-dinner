@@ -52,7 +52,9 @@ function AddRecipeSheet({ open, onClose }) {
                 onClick={() => setLevel(l)}
                 className={cx(
                   'flex-1 rounded-xl border py-3 text-sm font-medium transition-colors',
-                  level === l ? 'border-primary bg-primary-soft text-primary' : 'border-line text-muted',
+                  level === l
+                    ? 'border-primary bg-primary-soft text-primary'
+                    : 'border-line text-muted',
                 )}
               >
                 <Stars level={l} />
@@ -71,7 +73,9 @@ export default function Cooking() {
 
   return (
     <PageContainer width="narrow">
-      <h1 className="text-2xl font-extrabold text-ink md:text-3xl">내가 만들 수 있는 요리</h1>
+      <h1 className="text-2xl font-extrabold text-ink md:text-3xl">
+        내가 만들 수 있는 요리
+      </h1>
       <p className="mt-1.5 text-sm text-muted">
         만들 줄 아는 요리를 알려주면 딱 맞는 난이도로 추천해드려요.
       </p>
@@ -80,9 +84,14 @@ export default function Cooking() {
       <div className="mt-5 rounded-[var(--radius-card)] border border-line bg-card p-5 shadow-[var(--shadow-card)]">
         <p className="text-sm text-muted">나의 요리 레벨</p>
         <p className="num mt-1 text-4xl font-extrabold text-ink">
-          {skillLevel.toFixed(1)} <span className="text-lg font-semibold text-muted">/ 5</span>
+          {skillLevel.toFixed(1)}{' '}
+          <span className="text-lg font-semibold text-muted">/ 5</span>
         </p>
-        <ProgressBar value={(skillLevel / 5) * 100} label="요리 레벨" className="mt-3" />
+        <ProgressBar
+          value={(skillLevel / 5) * 100}
+          label="요리 레벨"
+          className="mt-3"
+        />
         <p className="mt-2 text-xs text-muted">
           만들 수 있는 요리 {recipes.length}개의 평균 난이도로 계산해요.
         </p>
@@ -103,7 +112,10 @@ export default function Cooking() {
         />
         <ul className="divide-y divide-line rounded-2xl border border-line bg-card">
           {recipes.map((r) => (
-            <li key={r.id} className="group flex items-center justify-between gap-3 px-4 py-3">
+            <li
+              key={r.id}
+              className="group flex items-center justify-between gap-3 px-4 py-3"
+            >
               <span className="text-sm font-medium text-ink">{r.name}</span>
               <div className="flex items-center gap-3">
                 <Stars level={r.level} />
@@ -127,15 +139,15 @@ export default function Cooking() {
 
       {/* 한 단계 발전 */}
       <section className="mt-9 rounded-[var(--radius-card)] border border-primary/25 bg-primary-soft/50 p-5">
-        <div className="flex items-center gap-2">
-          <span className="text-xl" aria-hidden="true">👩‍🍳</span>
-          <h2 className="text-lg font-bold text-ink">다음 레벨의 요리</h2>
-        </div>
+        <h2 className="text-lg font-bold text-ink">다음 레벨의 요리</h2>
         <p className="mt-1 text-sm text-muted">익숙한 메뉴에서 한 단계만 더.</p>
 
         <div className="mt-4 space-y-4">
           {PROGRESSIONS.map((p) => (
-            <div key={p.base} className="rounded-2xl border border-line bg-card p-4">
+            <div
+              key={p.base}
+              className="rounded-2xl border border-line bg-card p-4"
+            >
               <ol>
                 {p.steps.map((s, i) => (
                   <li key={s.name} className="flex gap-3">
@@ -146,16 +158,34 @@ export default function Cooking() {
                           i === 0 ? 'bg-ok text-white' : 'bg-bg text-muted',
                         )}
                       >
-                        {i === 0 ? <Icon name="check" size={13} strokeWidth={2.6} /> : i + 1}
+                        {i === 0 ? (
+                          <Icon name="check" size={13} strokeWidth={2.6} />
+                        ) : (
+                          i + 1
+                        )}
                       </span>
-                      {i < p.steps.length - 1 && <span className="my-1 w-px flex-1 bg-line" aria-hidden="true" />}
+                      {i < p.steps.length - 1 && (
+                        <span
+                          className="my-1 w-px flex-1 bg-line"
+                          aria-hidden="true"
+                        />
+                      )}
                     </div>
-                    <div className={cx('min-w-0 flex-1', i < p.steps.length - 1 && 'pb-3')}>
+                    <div
+                      className={cx(
+                        'min-w-0 flex-1',
+                        i < p.steps.length - 1 && 'pb-3',
+                      )}
+                    >
                       <div className="flex items-center gap-2">
-                        <span className="text-sm font-semibold text-ink">{s.name}</span>
+                        <span className="text-sm font-semibold text-ink">
+                          {s.name}
+                        </span>
                         <Stars level={s.level} className="ml-auto text-xs" />
                       </div>
-                      <p className="mt-0.5 text-xs leading-relaxed text-muted">{s.note}</p>
+                      <p className="mt-0.5 text-xs leading-relaxed text-muted">
+                        {s.note}
+                      </p>
                     </div>
                   </li>
                 ))}

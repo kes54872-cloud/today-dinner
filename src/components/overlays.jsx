@@ -57,7 +57,9 @@ export function BottomSheet({ open, onClose, title, children, footer }) {
             <Icon name="close" size={20} />
           </button>
         </div>
-        <div className="min-h-0 flex-1 overflow-y-auto px-5 py-4">{children}</div>
+        <div className="min-h-0 flex-1 overflow-y-auto px-5 py-4">
+          {children}
+        </div>
         {footer && (
           <div className="border-t border-line px-5 py-3 pb-safe">{footer}</div>
         )}
@@ -67,13 +69,25 @@ export function BottomSheet({ open, onClose, title, children, footer }) {
 }
 
 /* ── 확인 Modal ────────────────────────────────────────*/
-export function ConfirmModal({ open, onClose, onConfirm, title, message, confirmText = '확인', danger }) {
+export function ConfirmModal({
+  open,
+  onClose,
+  onConfirm,
+  title,
+  message,
+  confirmText = '확인',
+  danger,
+}) {
   useLockScroll(open)
   useEscape(open, onClose)
   if (!open) return null
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-      <div className="absolute inset-0 bg-ink/40 animate-fade-in" onClick={onClose} aria-hidden="true" />
+      <div
+        className="absolute inset-0 bg-ink/40 animate-fade-in"
+        onClick={onClose}
+        aria-hidden="true"
+      />
       <div
         role="alertdialog"
         aria-modal="true"
@@ -81,7 +95,9 @@ export function ConfirmModal({ open, onClose, onConfirm, title, message, confirm
         className="animate-rise relative w-full max-w-sm rounded-[20px] bg-card p-6 text-center shadow-[var(--shadow-pop)]"
       >
         <h2 className="text-base font-bold text-ink">{title}</h2>
-        {message && <p className="mt-2 text-sm leading-relaxed text-muted">{message}</p>}
+        {message && (
+          <p className="mt-2 text-sm leading-relaxed text-muted">{message}</p>
+        )}
         <div className="mt-5 flex gap-2">
           <button
             onClick={onClose}
@@ -96,7 +112,9 @@ export function ConfirmModal({ open, onClose, onConfirm, title, message, confirm
             }}
             className={cx(
               'flex-1 rounded-full py-3 text-sm font-semibold text-white',
-              danger ? 'bg-[#c0492e] hover:bg-[#a83e28]' : 'bg-primary hover:bg-primary-hover',
+              danger
+                ? 'bg-[#c0492e] hover:bg-[#a83e28]'
+                : 'bg-primary hover:bg-primary-hover',
             )}
           >
             {confirmText}

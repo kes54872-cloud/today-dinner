@@ -20,17 +20,20 @@ const PATHS = {
   chevronRight: 'M9 5l7 7-7 7',
   chevronDown: 'M6 9l6 6 6-6',
   clock: 'M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18ZM12 7v5l3.5 2',
-  spark: 'M12 3v4M12 17v4M4.9 4.9l2.8 2.8M16.3 16.3l2.8 2.8M3 12h4M17 12h4M4.9 19.1l2.8-2.8M16.3 7.7l2.8-2.8',
+  spark:
+    'M12 3v4M12 17v4M4.9 4.9l2.8 2.8M16.3 16.3l2.8 2.8M3 12h4M17 12h4M4.9 19.1l2.8-2.8M16.3 7.7l2.8-2.8',
   sliders: 'M4 8h10M18 8h2M4 16h4M12 16h8M14 6v4M8 14v4',
   chef: 'M7 15v4h10v-4M7 15a4 4 0 0 1-1-7.87A4 4 0 0 1 13.5 5 4 4 0 0 1 18 7.13 4 4 0 0 1 17 15H7Z',
   filter: 'M4 6h16M7 12h10M10 18h4',
-  trash: 'M5 7h14M10 7V5a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v2M6 7l1 13a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1l1-13',
+  trash:
+    'M5 7h14M10 7V5a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v2M6 7l1 13a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1l1-13',
   arrowRight: 'M5 12h14M13 6l6 6-6 6',
   arrowDown: 'M12 5v14M6 13l6 6 6-6',
   bag: 'M6 8h12l1 12H5L6 8ZM9 8V6a3 3 0 0 1 6 0v2',
   bell: 'M6 16V11a6 6 0 1 1 12 0v5l2 2H4l2-2ZM10 20a2 2 0 0 0 4 0',
   cart: 'M4 5h2l2.4 11.2A2 2 0 0 0 10.35 18H17a2 2 0 0 0 1.95-1.55L21 8H7M10 21h.01M17 21h.01',
-  refresh: 'M4 9a8 8 0 0 1 14-3l2 2M20 15a8 8 0 0 1-14 3l-2-2M18 4v4h-4M6 20v-4h4',
+  refresh:
+    'M4 9a8 8 0 0 1 14-3l2 2M20 15a8 8 0 0 1-14 3l-2-2M18 4v4h-4M6 20v-4h4',
 }
 
 export function Icon({ name, size = 22, className = '', strokeWidth = 1.7 }) {
@@ -53,38 +56,15 @@ export function Icon({ name, size = 22, className = '', strokeWidth = 1.7 }) {
   )
 }
 
-/* ── 음식 이미지 ────────────────────────────────────────
-   실제 사진이 없을 땐 재료 톤에서 뽑은 차분한 단색 배경만 보여줍니다.
-   photo(선택)가 있으면 그 위에 얹고, 로드 실패하면 조용히 배경만 유지. */
-export function FoodImage({ hue = 24, photo, alt = '', className = '', rounded = 'rounded-2xl' }) {
-  return (
-    <div
-      className={cx('relative overflow-hidden', rounded, className)}
-      style={{
-        background: `linear-gradient(180deg,
-          hsl(${hue} 24% 91%) 0%,
-          hsl(${hue} 20% 85%) 100%)`,
-      }}
-      role="img"
-      aria-label={alt || '음식 이미지'}
-    >
-      {photo && (
-        <img
-          src={photo}
-          alt={alt}
-          loading="lazy"
-          className="absolute inset-0 h-full w-full object-cover animate-fade-in"
-          onError={(e) => {
-            e.currentTarget.style.display = 'none'
-          }}
-        />
-      )}
-    </div>
-  )
-}
-
 /* ── Chip / 필터 칩 ─────────────────────────────────────*/
-export function Chip({ active, children, onClick, as = 'button', className = '', ...rest }) {
+export function Chip({
+  active,
+  children,
+  onClick,
+  as = 'button',
+  className = '',
+  ...rest
+}) {
   const Comp = as
   return (
     <Comp
@@ -176,7 +156,9 @@ export function SegmentedControl({ options, value, onChange, className = '' }) {
             onClick={() => onChange(v)}
             className={cx(
               'rounded-full px-4 py-1.5 font-medium transition-colors',
-              value === v ? 'bg-primary text-white' : 'text-muted hover:text-ink',
+              value === v
+                ? 'bg-primary text-white'
+                : 'text-muted hover:text-ink',
             )}
           >
             {label}
@@ -188,13 +170,10 @@ export function SegmentedControl({ options, value, onChange, className = '' }) {
 }
 
 /* ── Empty state ───────────────────────────────────────*/
-export function EmptyState({ icon = '🌱', title, description, action }) {
+export function EmptyState({ title, description, action }) {
   return (
     <div className="flex flex-col items-center justify-center rounded-[var(--radius-card)] border border-dashed border-line bg-card/60 px-6 py-14 text-center">
-      <div className="text-4xl" aria-hidden="true">
-        {icon}
-      </div>
-      <p className="mt-4 text-base font-semibold text-ink">{title}</p>
+      <p className="text-base font-semibold text-ink">{title}</p>
       {description && (
         <p className="mt-1.5 max-w-xs text-sm leading-relaxed text-muted">
           {description}
@@ -233,9 +212,14 @@ export function Button({
     <Comp
       className={cx(
         'inline-flex items-center justify-center gap-2 rounded-full font-semibold transition-colors disabled:opacity-50',
-        size === 'lg' ? 'px-6 py-3.5 text-base' : size === 'sm' ? 'px-3.5 py-2 text-sm' : 'px-5 py-3 text-sm',
+        size === 'lg'
+          ? 'px-6 py-3.5 text-base'
+          : size === 'sm'
+            ? 'px-3.5 py-2 text-sm'
+            : 'px-5 py-3 text-sm',
         variant === 'primary' && 'bg-primary text-white hover:bg-primary-hover',
-        variant === 'outline' && 'border border-line-strong bg-card text-ink hover:border-ink/40',
+        variant === 'outline' &&
+          'border border-line-strong bg-card text-ink hover:border-ink/40',
         variant === 'ghost' && 'text-muted hover:bg-line/50 hover:text-ink',
         className,
       )}

@@ -17,14 +17,17 @@ const DISLIKE_REASONS = [
 export function Preferences() {
   return (
     <PageContainer width="narrow">
-      <h1 className="text-2xl font-extrabold text-ink md:text-3xl">나는 이렇게 먹어요.</h1>
+      <h1 className="text-2xl font-extrabold text-ink md:text-3xl">
+        나는 이렇게 먹어요.
+      </h1>
       <p className="mt-1.5 text-sm text-muted">
         같은 재료도 먹는 방법에 따라 다르게 설정할 수 있어요.
       </p>
 
       <p className="mt-6 rounded-xl bg-primary-soft/60 px-4 py-3 text-xs leading-relaxed text-ink/80">
-        예를 들어 <b>버섯</b>이 싫어도 <b>파스타 속 버섯</b>은 좋을 수 있죠. 재료 하나를
-        통째로 빼는 대신, 상황별로 알려주면 더 잘 맞는 메뉴를 찾아드려요.
+        예를 들어 <b>버섯</b>이 싫어도 <b>파스타 속 버섯</b>은 좋을 수 있죠.
+        재료 하나를 통째로 빼는 대신, 상황별로 알려주면 더 잘 맞는 메뉴를
+        찾아드려요.
       </p>
 
       <ul className="mt-5 space-y-2.5">
@@ -34,12 +37,13 @@ export function Preferences() {
               to={`/my/preferences/${it.id}`}
               className="flex items-center gap-3.5 rounded-2xl border border-line bg-card p-4 hover:border-primary/40"
             >
-              <span className="text-2xl" aria-hidden="true">
-                {it.emoji}
-              </span>
               <span className="min-w-0 flex-1">
-                <span className="block text-sm font-bold text-ink">{it.name}</span>
-                <span className="block truncate text-xs text-muted">{it.summary}</span>
+                <span className="block text-sm font-bold text-ink">
+                  {it.name}
+                </span>
+                <span className="block truncate text-xs text-muted">
+                  {it.summary}
+                </span>
               </span>
               <Icon name="chevronRight" size={18} className="text-muted" />
             </Link>
@@ -61,12 +65,14 @@ export function IngredientPreference() {
   const { id } = useParams()
   const { getPref, setPref, toast } = useApp()
   const item = PREFERENCE_ITEMS.find((i) => i.id === id)
-  const [reasons, setReasons] = useState(() => new Set(item?.dislikeReasons ?? []))
+  const [reasons, setReasons] = useState(
+    () => new Set(item?.dislikeReasons ?? []),
+  )
 
   if (!item) {
     return (
       <PageContainer width="narrow">
-        <EmptyState icon="🤔" title="재료를 찾을 수 없어요" />
+        <EmptyState title="재료를 찾을 수 없어요" />
       </PageContainer>
     )
   }
@@ -89,16 +95,14 @@ export function IngredientPreference() {
       </Link>
 
       <div className="flex items-center gap-3">
-        <span className="text-3xl" aria-hidden="true">
-          {item.emoji}
-        </span>
         <h1 className="text-2xl font-extrabold text-ink">{item.name}</h1>
       </div>
 
       {/* 싫은 이유 */}
       <section className="mt-6">
         <h2 className="mb-2.5 text-sm font-bold text-ink">
-          어떤 {item.name}이(가) 별로인가요? <span className="font-normal text-muted">(복수 선택)</span>
+          어떤 {item.name}이(가) 별로인가요?{' '}
+          <span className="font-normal text-muted">(복수 선택)</span>
         </h2>
         <div className="flex flex-wrap gap-2">
           {DISLIKE_REASONS.map((r) => {
@@ -110,7 +114,9 @@ export function IngredientPreference() {
                 aria-pressed={on}
                 className={cx(
                   'rounded-full border px-3.5 py-2 text-sm font-medium transition-colors',
-                  on ? 'border-primary bg-primary text-white' : 'border-line bg-card text-ink hover:border-line-strong',
+                  on
+                    ? 'border-primary bg-primary text-white'
+                    : 'border-line bg-card text-ink hover:border-line-strong',
                 )}
               >
                 {r}
@@ -124,7 +130,8 @@ export function IngredientPreference() {
       <section className="mt-7">
         <h2 className="mb-1 text-sm font-bold text-ink">먹는 방식별 선호도</h2>
         <p className="mb-3 text-xs text-muted">
-          😖 절대 싫어요 · 🙅 피하고 싶어요 · 😐 상황에 따라 · 🙂 괜찮아요 · ❤️ 좋아해요
+          😖 절대 싫어요 · 🙅 피하고 싶어요 · 😐 상황에 따라 · 🙂 괜찮아요 · ❤️
+          좋아해요
         </p>
         <div className="space-y-2.5">
           {item.contexts.map((c) => (
@@ -145,7 +152,8 @@ export function IngredientPreference() {
         저장
       </button>
       <p className="mt-3 text-center text-xs text-muted">
-        "{item.name} = 싫음"으로 모든 메뉴를 빼지 않아요. 위 설정에 맞춰 조절해요.
+        "{item.name} = 싫음"으로 모든 메뉴를 빼지 않아요. 위 설정에 맞춰
+        조절해요.
       </p>
     </PageContainer>
   )

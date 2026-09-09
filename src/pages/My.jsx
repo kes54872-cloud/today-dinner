@@ -7,9 +7,24 @@ import { TASTE_SUMMARY } from '../data/mock'
 import { useApp } from '../store/AppStore'
 
 const LINKS = [
-  { to: '/my/preferences', icon: 'sliders', label: '취향 · 편식 관리', desc: '재료를 먹는 방식별로 설정' },
-  { to: '/cooking', icon: 'chef', label: '요리 실력', desc: '만들 수 있는 요리와 레벨' },
-  { to: '/fridge', icon: 'fridge', label: '냉장고 관리', desc: '재료 추가 · 정리' },
+  {
+    to: '/my/preferences',
+    icon: 'sliders',
+    label: '취향 · 편식 관리',
+    desc: '재료를 먹는 방식별로 설정',
+  },
+  {
+    to: '/cooking',
+    icon: 'chef',
+    label: '요리 실력',
+    desc: '만들 수 있는 요리와 레벨',
+  },
+  {
+    to: '/fridge',
+    icon: 'fridge',
+    label: '냉장고 관리',
+    desc: '재료 추가 · 정리',
+  },
 ]
 
 export default function My() {
@@ -18,7 +33,9 @@ export default function My() {
 
   return (
     <PageContainer width="narrow">
-      <h1 className="text-2xl font-extrabold text-ink md:text-3xl">나의 Food Profile</h1>
+      <h1 className="text-2xl font-extrabold text-ink md:text-3xl">
+        나의 Food Profile
+      </h1>
       <p className="mt-1.5 text-sm text-muted">
         이 정보를 바탕으로 오늘의 저녁을 골라드려요.
       </p>
@@ -40,28 +57,38 @@ export default function My() {
         <div className="rounded-2xl border border-line bg-card p-4">
           <p className="text-xs text-muted">요리 레벨</p>
           <p className="num mt-1.5 text-xl font-extrabold text-ink">
-            {skillLevel.toFixed(1)} <span className="text-sm font-semibold text-muted">/ 5</span>
+            {skillLevel.toFixed(1)}{' '}
+            <span className="text-sm font-semibold text-muted">/ 5</span>
           </p>
         </div>
         <div className="rounded-2xl border border-line bg-card p-4">
           <p className="text-xs text-muted">냉장고</p>
           <p className="num mt-1.5 text-xl font-extrabold text-ink">
-            {fridge.length}개 <span className="text-sm font-semibold text-muted">재료</span>
+            {fridge.length}개{' '}
+            <span className="text-sm font-semibold text-muted">재료</span>
           </p>
         </div>
       </div>
 
-      <p className="num mt-3 text-xs text-muted">찜한 메뉴 {savedIds.length}개</p>
+      <p className="num mt-3 text-xs text-muted">
+        찜한 메뉴 {savedIds.length}개
+      </p>
 
       {/* 설정 링크 */}
       <nav className="mt-6 divide-y divide-line overflow-hidden rounded-2xl border border-line bg-card">
         {LINKS.map((l) => (
-          <Link key={l.to} to={l.to} className="flex items-center gap-3.5 px-4 py-4 hover:bg-bg/70">
+          <Link
+            key={l.to}
+            to={l.to}
+            className="flex items-center gap-3.5 px-4 py-4 hover:bg-bg/70"
+          >
             <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-primary-soft text-primary">
               <Icon name={l.icon} size={18} />
             </span>
             <span className="min-w-0 flex-1">
-              <span className="block text-sm font-semibold text-ink">{l.label}</span>
+              <span className="block text-sm font-semibold text-ink">
+                {l.label}
+              </span>
               <span className="block text-xs text-muted">{l.desc}</span>
             </span>
             <Icon name="chevronRight" size={18} className="text-muted" />
@@ -75,7 +102,9 @@ export default function My() {
           <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-bg text-muted">
             <Icon name="bell" size={18} />
           </span>
-          <span className="flex-1 text-sm font-semibold text-ink">저녁 시간 추천 알림</span>
+          <span className="flex-1 text-sm font-semibold text-ink">
+            저녁 시간 추천 알림
+          </span>
           <span className="text-xs text-muted">준비 중</span>
         </div>
         <div className="border-t border-line px-4 py-4">

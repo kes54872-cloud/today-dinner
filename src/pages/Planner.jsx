@@ -44,17 +44,19 @@ export default function Planner() {
             </p>
             <button
               onClick={() => cycleMode(i, d.mode)}
-              className="mt-2 inline-flex w-fit items-center gap-1 rounded-full bg-bg px-2 py-1 text-xs font-medium text-ink hover:bg-line/70"
+              className="mt-2 inline-flex w-fit items-center gap-1 rounded-full bg-bg px-2.5 py-1 text-xs font-medium text-ink hover:bg-line/70"
               aria-label={`${d.day}요일 식사 방식 바꾸기 (현재 ${MODE_LABEL[d.mode].text})`}
             >
-              <span aria-hidden="true">{MODE_LABEL[d.mode].emoji}</span>
               {MODE_LABEL[d.mode].text}
             </button>
             <p className="num mt-2 text-xs text-muted">{minutes(d.time)}</p>
             {d.key.length > 0 && (
               <p className="mt-1.5 flex flex-wrap gap-1">
                 {d.key.map((k) => (
-                  <span key={k} className="rounded bg-bg px-1.5 py-0.5 text-[11px] text-muted">
+                  <span
+                    key={k}
+                    className="rounded bg-bg px-1.5 py-0.5 text-[11px] text-muted"
+                  >
                     {k}
                   </span>
                 ))}
@@ -82,15 +84,21 @@ export default function Planner() {
                   className="inline-flex items-center gap-1 rounded-full bg-bg px-2.5 py-1 text-xs font-medium text-ink"
                   aria-label={`${d.day}요일 식사 방식 바꾸기 (현재 ${MODE_LABEL[d.mode].text})`}
                 >
-                  <span aria-hidden="true">{MODE_LABEL[d.mode].emoji}</span>
                   {MODE_LABEL[d.mode].text}
                 </button>
-                <span className="num text-xs text-muted">{minutes(d.time)}</span>
+                <span className="num text-xs text-muted">
+                  {minutes(d.time)}
+                </span>
               </div>
               {d.key.length > 0 && (
                 <p className="mt-2 flex flex-wrap gap-1">
                   {d.key.map((k) => (
-                    <span key={k} className={cx('rounded bg-bg px-1.5 py-0.5 text-[11px] text-muted')}>
+                    <span
+                      key={k}
+                      className={cx(
+                        'rounded bg-bg px-1.5 py-0.5 text-[11px] text-muted',
+                      )}
+                    >
                       {k}
                     </span>
                   ))}

@@ -45,7 +45,9 @@ export function PreferenceSelector({ label, value, onChange, hint }) {
           )
         })}
       </div>
-      {hint && <p className="mt-2 text-xs leading-relaxed text-muted">{hint}</p>}
+      {hint && (
+        <p className="mt-2 text-xs leading-relaxed text-muted">{hint}</p>
+      )}
     </div>
   )
 }
