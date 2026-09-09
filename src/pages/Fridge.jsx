@@ -3,22 +3,80 @@ import { Link } from 'react-router-dom'
 import { PageContainer } from '../components/layout'
 import { BottomSheet } from '../components/overlays'
 import { Button, Chip, EmptyState, Icon } from '../components/ui'
-import { AMOUNT_OPTIONS } from '../lib/format'
+import { cx, defaultQty, formatQty, qtyPresets, qtyStep } from '../lib/format'
 import { FRIDGE_CATEGORIES, INGREDIENT_CATALOG } from '../data/mock'
 import { useApp } from '../store/AppStore'
 
+/* ── 수량 입력 (−/+ 스텝 + 직접 입력 + 빠른 선택) ─────*/
+function QuantityField({ unit = '개', value, onChange }) {
+  const step = qtyStep(unit)
+  return (
+    <div>
+      <div className="flex items-center justify-center gap-3">
+        <button
+          type="button"
+          onClick={() => onChange(Math.max(0, value - step))}
+          aria-label="수량 줄이기"
+          className="grid h-11 w-11 place-items-center rounded-full border border-line-strong text-ink hover:border-ink/40"
+        >
+          <Icon name="minus" size={18} />
+        </button>
+        <span className="flex items-baseline gap-1.5">
+          <input
+            type="number"
+            inputMode="numeric"
+            min={0}
+            value={value}
+            onChange={(e) => onChange(Math.max(0, Number(e.target.value) || 0))}
+            aria-label={`수량 (${unit})`}
+            className="num w-24 rounded-xl border border-line bg-bg py-2.5 text-center text-xl font-bold text-ink outline-none focus:border-primary"
+          />
+          <span className="text-sm font-semibold text-muted">{unit}</span>
+        </span>
+        <button
+          type="button"
+          onClick={() => onChange(value + step)}
+          aria-label="수량 늘리기"
+          className="grid h-11 w-11 place-items-center rounded-full border border-line-strong text-ink hover:border-ink/40"
+        >
+          <Icon name="plus" size={18} />
+        </button>
+      </div>
+      <div className="mt-3 flex flex-wrap justify-center gap-2">
+        {qtyPresets(unit).map((p) => (
+          <button
+            key={p}
+            type="button"
+            onClick={() => onChange(p)}
+            className={cx(
+              'num rounded-full border px-3 py-1.5 text-sm font-medium transition-colors',
+              value === p
+                ? 'border-primary bg-primary text-white'
+                : 'border-line bg-card text-ink hover:border-line-strong',
+            )}
+          >
+            {p}
+            {unit}
+          </button>
+        ))}
+      </div>
+    </div>
+  )
+}
+
+/* ── 재료 추가 (2단계) ─────────────────────────────────*/
 function AddIngredientSheet({ open, onClose }) {
   const { fridge, addIngredient } = useApp()
   const [step, setStep] = useState(1)
   const [query, setQuery] = useState('')
   const [picked, setPicked] = useState(null)
+  const [count, setCount] = useState(1)
 
   const reset = () => {
     setStep(1)
     setQuery('')
     setPicked(null)
   }
-
   const close = () => {
     onClose()
     setTimeout(reset, 200)
@@ -35,7 +93,7 @@ function AddIngredientSheet({ open, onClose }) {
     <BottomSheet
       open={open}
       onClose={close}
-      title={step === 1 ? '무엇이 있나요?' : '얼마나 남았나요?'}
+      title={step === 1 ? '무엇이 있나요?' : `${picked?.name} · 얼마나 있나요?`}
       footer={
         step === 2 && (
           <div className="flex gap-2">
@@ -45,11 +103,11 @@ function AddIngredientSheet({ open, onClose }) {
             <Button
               className="flex-1"
               onClick={() => {
-                addIngredient({ ...picked, amount: '모르겠어요', qty: '' })
+                addIngredient({ ...picked, count, amount: null })
                 close()
               }}
             >
-              무게 입력 없이 추가
+              추가하기
             </Button>
           </div>
         )
@@ -80,6 +138,7 @@ function AddIngredientSheet({ open, onClose }) {
                   <button
                     onClick={() => {
                       setPicked(i)
+                      setCount(defaultQty(i.unit))
                       setStep(2)
                     }}
                     className="flex w-full items-center gap-2 rounded-xl border border-line bg-card px-3.5 py-3 text-left text-sm hover:border-primary/50"
@@ -95,27 +154,64 @@ function AddIngredientSheet({ open, onClose }) {
           )}
         </div>
       ) : (
-        <div className="space-y-4">
-          <div className="rounded-xl bg-bg px-4 py-3">
-            <span className="font-semibold text-ink">{picked?.name}</span>
-          </div>
-          <div className="grid grid-cols-2 gap-2">
-            {AMOUNT_OPTIONS.map((a) => (
-              <button
-                key={a}
-                onClick={() => {
-                  addIngredient({ ...picked, amount: a, qty: '' })
-                  close()
-                }}
-                className="rounded-xl border border-line bg-card py-4 text-sm font-medium text-ink hover:border-primary/50 hover:bg-primary-soft"
-              >
-                {a}
-              </button>
-            ))}
-          </div>
-          <p className="text-center text-xs text-muted">
-            정확한 무게 입력은 선택이에요. 나중에 바꿀 수 있어요.
-          </p>
+        <div className="space-y-5 py-2">
+          <QuantityField
+            unit={picked?.unit}
+            value={count}
+            onChange={setCount}
+          />
+          <button
+            type="button"
+            onClick={() => {
+              addIngredient({ ...picked, count: null, amount: '적당히' })
+              close()
+            }}
+            className="mx-auto block text-sm text-muted underline underline-offset-2 hover:text-ink"
+          >
+            정확한 양은 잘 모르겠어요
+          </button>
+        </div>
+      )}
+    </BottomSheet>
+  )
+}
+
+/* ── 수량 수정 ─────────────────────────────────────────*/
+function EditIngredientSheet({ item, onClose }) {
+  const { updateIngredient, removeIngredient } = useApp()
+  const [count, setCount] = useState(item?.count ?? defaultQty(item?.unit))
+
+  return (
+    <BottomSheet
+      open={!!item}
+      onClose={onClose}
+      title={item ? `${item.name} 수량` : ''}
+      footer={
+        <div className="flex gap-2">
+          <Button
+            variant="ghost"
+            onClick={() => {
+              removeIngredient(item.id)
+              onClose()
+            }}
+          >
+            <Icon name="trash" size={16} /> 삭제
+          </Button>
+          <Button
+            className="flex-1"
+            onClick={() => {
+              updateIngredient(item.id, { count, amount: null })
+              onClose()
+            }}
+          >
+            저장
+          </Button>
+        </div>
+      }
+    >
+      {item && (
+        <div className="py-3">
+          <QuantityField unit={item.unit} value={count} onChange={setCount} />
         </div>
       )}
     </BottomSheet>
@@ -123,8 +219,9 @@ function AddIngredientSheet({ open, onClose }) {
 }
 
 export default function Fridge() {
-  const { fridge, removeIngredient } = useApp()
+  const { fridge } = useApp()
   const [sheet, setSheet] = useState(false)
+  const [editing, setEditing] = useState(null)
   const [cat, setCat] = useState('전체')
 
   const cats = [
@@ -178,21 +275,17 @@ export default function Fridge() {
 
           <ul className="mt-4 grid grid-cols-2 gap-2.5 sm:grid-cols-3">
             {shown.map((f) => (
-              <li
-                key={f.id}
-                className="group relative flex flex-col items-center gap-1 rounded-2xl border border-line bg-card p-4 text-center"
-              >
+              <li key={f.id}>
                 <button
-                  onClick={() => removeIngredient(f.id)}
-                  aria-label={`${f.name} 삭제`}
-                  className="absolute right-1.5 top-1.5 rounded-full p-1 text-muted opacity-0 transition-opacity hover:bg-line/60 hover:text-ink group-hover:opacity-100 focus-visible:opacity-100"
+                  onClick={() => setEditing(f)}
+                  className="flex w-full flex-col items-center gap-1 rounded-2xl border border-line bg-card p-4 text-center transition-colors hover:border-primary/40"
+                  aria-label={`${f.name} 수량 수정`}
                 >
-                  <Icon name="close" size={15} />
+                  <span className="text-sm font-semibold text-ink">
+                    {f.name}
+                  </span>
+                  <span className="num text-xs text-muted">{formatQty(f)}</span>
                 </button>
-                <span className="text-sm font-semibold text-ink">{f.name}</span>
-                <span className="num text-xs text-muted">
-                  {f.qty || f.amount}
-                </span>
               </li>
             ))}
           </ul>
@@ -214,6 +307,11 @@ export default function Fridge() {
       )}
 
       <AddIngredientSheet open={sheet} onClose={() => setSheet(false)} />
+      <EditIngredientSheet
+        key={editing?.id}
+        item={editing}
+        onClose={() => setEditing(null)}
+      />
     </PageContainer>
   )
 }

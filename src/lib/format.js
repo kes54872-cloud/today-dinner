@@ -22,8 +22,30 @@ export const PREF_SCALE = [
 export const prefMeta = (value) =>
   PREF_SCALE.find((p) => p.value === value) ?? PREF_SCALE[2]
 
-// 재료 보유량
+// 재료 보유량 (대략)
 export const AMOUNT_OPTIONS = ['조금', '반 정도', '많이', '모르겠어요']
+
+// 재료 수량 입력 — 단위별 증감 폭 / 빠른 선택값 / 기본값
+export const qtyStep = (unit) => (unit === 'g' ? 50 : unit === 'ml' ? 100 : 1)
+
+export const qtyPresets = (unit) =>
+  unit === 'g'
+    ? [100, 200, 300, 500]
+    : unit === 'ml'
+      ? [200, 500, 1000]
+      : [1, 2, 3, 5]
+
+export const defaultQty = (unit) =>
+  unit === 'g' ? 200 : unit === 'ml' ? 500 : 1
+
+// 냉장고 항목 → "3개" / "약 300g" 같은 표시 문자열
+export const formatQty = (item) => {
+  if (item.count != null && item.unit) {
+    const approx = item.unit === 'g' || item.unit === 'ml' ? '약 ' : ''
+    return `${approx}${item.count}${item.unit}`
+  }
+  return item.qty || item.amount || ''
+}
 
 export const cx = (...parts) => parts.filter(Boolean).join(' ')
 

@@ -73,7 +73,10 @@ export function AppProvider({ children }) {
   const addIngredient = useCallback(
     (item) => {
       setFridge((f) => {
-        if (f.some((x) => x.id === item.id)) return f
+        // 이미 있으면 수량만 갱신
+        if (f.some((x) => x.id === item.id)) {
+          return f.map((x) => (x.id === item.id ? { ...x, ...item } : x))
+        }
         return [...f, item]
       })
       toast(`${item.name} 추가`)
@@ -85,8 +88,8 @@ export function AppProvider({ children }) {
     setFridge((f) => f.filter((x) => x.id !== id))
   }, [])
 
-  const updateIngredientAmount = useCallback((id, amount) => {
-    setFridge((f) => f.map((x) => (x.id === id ? { ...x, amount } : x)))
+  const updateIngredient = useCallback((id, patch) => {
+    setFridge((f) => f.map((x) => (x.id === id ? { ...x, ...patch } : x)))
   }, [])
 
   const addRecipe = useCallback(
@@ -151,7 +154,7 @@ export function AppProvider({ children }) {
     toggleSave,
     addIngredient,
     removeIngredient,
-    updateIngredientAmount,
+    updateIngredient,
     addRecipe,
     removeRecipe,
     setPref,

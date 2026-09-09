@@ -8,7 +8,7 @@ import {
 } from '../components/cards'
 import { SectionHead, SkeletonCard, Icon } from '../components/ui'
 import { MENUS, INGREDIENT_CATALOG } from '../data/mock'
-import { explainReasons } from '../lib/format'
+import { defaultQty, explainReasons } from '../lib/format'
 import { useApp } from '../store/AppStore'
 
 const MODES = [
@@ -42,7 +42,11 @@ function QuickAsk() {
       <div className="ml-auto flex gap-2">
         <button
           onClick={() => {
-            addIngredient({ ...item, amount: '모르겠어요', qty: '' })
+            addIngredient({
+              ...item,
+              count: defaultQty(item.unit),
+              amount: null,
+            })
             setAnswered(true)
           }}
           className="rounded-full bg-primary px-4 py-2 text-sm font-semibold text-white hover:bg-primary-hover"
