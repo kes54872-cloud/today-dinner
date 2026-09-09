@@ -1,0 +1,164 @@
+@import 'tailwindcss';
+
+/* ── 디자인 시스템 토큰 ───────────────────────────────── */
+@theme {
+  --color-bg: #f8f6f2;
+  --color-primary: #e76f51;
+  --color-primary-soft: #fbe9e3;
+  --color-primary-hover: #d65f42;
+  --color-ink: #292725;
+  --color-muted: #817b75;
+  --color-card: #ffffff;
+  --color-line: #e8e3dc;
+  --color-line-strong: #d8d1c6;
+  --color-ok: #4c956c;
+  --color-ok-soft: #e4efe8;
+
+  --font-sans: 'Pretendard Variable', Pretendard, 'SUIT Variable', SUIT,
+    system-ui, -apple-system, 'Segoe UI', Roboto, 'Apple SD Gothic Neo',
+    'Malgun Gothic', sans-serif;
+
+  --radius-card: 20px;
+
+  --shadow-card: 0 1px 2px rgba(41, 39, 37, 0.04),
+    0 8px 24px -12px rgba(41, 39, 37, 0.12);
+  --shadow-pop: 0 12px 40px -12px rgba(41, 39, 37, 0.22);
+
+  --default-transition-duration: 160ms;
+}
+
+/* ── 베이스 ──────────────────────────────────────────── */
+html {
+  background: var(--color-bg);
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-sans);
+  color: var(--color-ink);
+  background: var(--color-bg);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  line-height: 1.5;
+  overflow-x: hidden;
+}
+
+/* 숫자(가격·시간·퍼센트·난이도)는 조금 더 굵게 + 표 정렬 */
+.num {
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.01em;
+}
+
+/* 포커스 링 — 키보드 사용자에게만 또렷하게 */
+:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+/* iOS 사파리 하단 안전영역 */
+.pb-safe {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+.h-safe-nav {
+  height: calc(64px + env(safe-area-inset-bottom));
+}
+
+/* 스크롤바가 있는 가로 스크롤 영역 */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* ── 애니메이션 (절제해서 사용) ───────────────────────── */
+@keyframes pop {
+  0% {
+    transform: scale(1);
+  }
+  40% {
+    transform: scale(1.28);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+.animate-pop {
+  animation: pop 260ms ease-out;
+}
+
+@keyframes sheet-up {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+.animate-sheet-up {
+  animation: sheet-up 240ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+.animate-fade-in {
+  animation: fade-in 200ms ease-out;
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.animate-rise {
+  animation: rise 320ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
+.skeleton {
+  position: relative;
+  overflow: hidden;
+  background: #efeae2;
+}
+.skeleton::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.6),
+    transparent
+  );
+  animation: shimmer 1.4s infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

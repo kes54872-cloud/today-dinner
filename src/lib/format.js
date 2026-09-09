@@ -1,0 +1,29 @@
+// 화면에 반복해서 쓰이는 표기 헬퍼
+
+export const won = (n) => `${n.toLocaleString('ko-KR')}원`
+
+export const minutes = (n) => `${n}분`
+
+// 난이도 1~3 → 별 문자열 (fallback / aria 용)
+export const starText = (level) =>
+  '★★★☆☆☆'.slice(3 - level, 6 - level)
+
+export const difficultyLabel = (level) =>
+  ({ 1: '쉬움', 2: '보통', 3: '도전' }[level] ?? '보통')
+
+// 5단계 편식 선호도
+export const PREF_SCALE = [
+  { value: 1, emoji: '😖', label: '절대 싫어요' },
+  { value: 2, emoji: '🙅', label: '가능하면 피하고 싶어요' },
+  { value: 3, emoji: '😐', label: '상황에 따라 괜찮아요' },
+  { value: 4, emoji: '🙂', label: '괜찮아요' },
+  { value: 5, emoji: '❤️', label: '좋아해요' },
+]
+
+export const prefMeta = (value) =>
+  PREF_SCALE.find((p) => p.value === value) ?? PREF_SCALE[2]
+
+// 재료 보유량
+export const AMOUNT_OPTIONS = ['조금', '반 정도', '많이', '모르겠어요']
+
+export const cx = (...parts) => parts.filter(Boolean).join(' ')
