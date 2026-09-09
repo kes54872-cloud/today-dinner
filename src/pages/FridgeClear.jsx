@@ -49,7 +49,7 @@ export default function FridgeClear() {
     <PageContainer width="narrow">
       <BackLink />
       <h1 className="text-2xl font-extrabold text-ink md:text-3xl">
-        🧊 냉장고를 비워볼까요?
+        냉장고를 비워볼까요?
       </h1>
 
       {/* 활용도 시각화 */}
@@ -84,7 +84,7 @@ export default function FridgeClear() {
                 selId === m.id ? 'border-primary ring-1 ring-primary/30' : 'border-line hover:border-line-strong',
               )}
             >
-              <FoodImage emoji={m.emoji} hue={m.hue} alt="" className="h-16 w-16 shrink-0" />
+              <FoodImage hue={m.hue} alt="" className="h-16 w-16 shrink-0" />
               <div className="min-w-0 flex-1">
                 <p className="truncate text-sm font-bold text-ink">{m.name}</p>
                 <p className="num mt-0.5 text-xs text-muted">

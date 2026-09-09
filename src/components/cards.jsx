@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useApp } from '../store/AppStore'
-import { won, minutes, cx } from '../lib/format'
+import { won, minutes, cx, fridgeMatchCount } from '../lib/format'
 import { FoodImage, Icon, MatchBadge, Stars } from './ui'
 
 /* ── 좋아요(찜) 버튼 — 작은 scale 애니메이션 ───────────*/
@@ -38,7 +38,8 @@ export function LikeButton({ id, name, floating, className = '' }) {
 
 /* ── 음식 카드 (그리드용) ──────────────────────────────*/
 export function MenuCard({ menu }) {
-  const fu = menu.fridgeUse?.length ?? 0
+  const { fridge } = useApp()
+  const fu = fridgeMatchCount(menu, fridge)
   return (
     <Link
       to={`/menu/${menu.id}`}
@@ -46,7 +47,6 @@ export function MenuCard({ menu }) {
     >
       <div className="relative">
         <FoodImage
-          emoji={menu.emoji}
           hue={menu.hue}
           photo={menu.photo}
           alt={menu.name}
@@ -67,7 +67,7 @@ export function MenuCard({ menu }) {
         </p>
         {fu > 0 && (
           <p className="mt-auto inline-flex items-center gap-1 rounded-lg bg-ok-soft px-2 py-1 text-xs font-medium text-ok">
-            🧊 냉장고 재료 <span className="num">{fu}개</span>
+            냉장고 재료 <span className="num">{fu}개</span>
           </p>
         )}
       </div>
@@ -77,7 +77,8 @@ export function MenuCard({ menu }) {
 
 /* ── 오늘의 추천 (Home 대표 카드) ──────────────────────*/
 export function RecommendationCard({ menu }) {
-  const fu = menu.fridgeUse?.length ?? 0
+  const { fridge } = useApp()
+  const fu = fridgeMatchCount(menu, fridge)
   return (
     <Link
       to={`/menu/${menu.id}`}
@@ -91,7 +92,6 @@ export function RecommendationCard({ menu }) {
           <LikeButton id={menu.id} name={menu.name} floating />
         </div>
         <FoodImage
-          emoji={menu.emoji}
           hue={menu.hue}
           photo={menu.photo}
           alt={menu.name}
@@ -143,7 +143,6 @@ export function DeliveryCard({ item }) {
   return (
     <div className="flex gap-3 overflow-hidden rounded-[var(--radius-card)] border border-line bg-card p-3 shadow-[var(--shadow-card)]">
       <FoodImage
-        emoji={item.emoji}
         hue={item.hue}
         alt={item.name}
         className="h-24 w-24 shrink-0"

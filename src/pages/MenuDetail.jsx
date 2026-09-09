@@ -3,7 +3,7 @@ import { PageContainer } from '../components/layout'
 import { LikeButton, RecommendationReason } from '../components/cards'
 import { Button, FoodImage, Icon, MatchBadge, Stars } from '../components/ui'
 import { EmptyState } from '../components/ui'
-import { won, minutes, difficultyLabel } from '../lib/format'
+import { won, minutes, difficultyLabel, explainReasons } from '../lib/format'
 import { MENUS, DELIVERY } from '../data/mock'
 import { useApp } from '../store/AppStore'
 
@@ -37,7 +37,7 @@ export default function MenuDetail() {
         <BackBtn onClick={() => navigate(-1)} />
         <div className="overflow-hidden rounded-[var(--radius-card)] border border-line bg-card shadow-[var(--shadow-card)]">
           <div className="relative">
-            <FoodImage emoji={delivery.emoji} hue={delivery.hue} alt={delivery.name} rounded="rounded-none" className="aspect-[16/10] w-full" />
+            <FoodImage hue={delivery.hue} alt={delivery.name} rounded="rounded-none" className="aspect-[16/10] w-full" />
             <div className="absolute right-3 top-3">
               <LikeButton id={delivery.id} name={delivery.name} floating />
             </div>
@@ -69,7 +69,6 @@ export default function MenuDetail() {
       <article className="overflow-hidden rounded-[var(--radius-card)] border border-line bg-card shadow-[var(--shadow-card)]">
         <div className="relative">
           <FoodImage
-            emoji={menu.emoji}
             hue={menu.hue}
             photo={menu.photo}
             alt={menu.name}
@@ -113,24 +112,7 @@ export default function MenuDetail() {
             </div>
           </dl>
 
-          <RecommendationReason reasons={menu.reasons} />
-
-          {/* 냉장고 재료 매칭 */}
-          <section>
-            <h2 className="mb-2 text-sm font-bold text-ink">냉장고 재료</h2>
-            <div className="flex flex-wrap gap-1.5">
-              {menu.fridgeUse.map((n) => (
-                <span key={n} className="inline-flex items-center gap-1 rounded-full bg-ok-soft px-2.5 py-1 text-xs font-medium text-ok">
-                  <Icon name="check" size={12} strokeWidth={2.6} /> {n}
-                </span>
-              ))}
-              {menu.buyExtra.map((n) => (
-                <span key={n} className="inline-flex items-center gap-1 rounded-full border border-line px-2.5 py-1 text-xs font-medium text-muted">
-                  <Icon name="cart" size={12} /> {n} 구매
-                </span>
-              ))}
-            </div>
-          </section>
+          <RecommendationReason reasons={explainReasons(menu, fridge)} />
 
           {/* 재료 */}
           <section>

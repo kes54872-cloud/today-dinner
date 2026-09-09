@@ -26,25 +26,25 @@ export default function My() {
       {/* 요약 카드 */}
       <div className="mt-5 grid grid-cols-2 gap-3">
         <div className="rounded-2xl border border-line bg-card p-4">
-          <p className="text-xs text-muted">❤️ 좋아하는 음식</p>
+          <p className="text-xs text-muted">좋아하는 음식</p>
           <p className="mt-1.5 text-sm font-semibold leading-relaxed text-ink">
             {TASTE_SUMMARY.likes.join(' · ')}
           </p>
         </div>
         <div className="rounded-2xl border border-line bg-card p-4">
-          <p className="text-xs text-muted">🙅 피하고 싶은 것</p>
+          <p className="text-xs text-muted">피하고 싶은 것</p>
           <p className="mt-1.5 text-sm font-semibold leading-relaxed text-ink">
             {TASTE_SUMMARY.avoid.join(' · ')}
           </p>
         </div>
         <div className="rounded-2xl border border-line bg-card p-4">
-          <p className="text-xs text-muted">👩‍🍳 요리 레벨</p>
+          <p className="text-xs text-muted">요리 레벨</p>
           <p className="num mt-1.5 text-xl font-extrabold text-ink">
             {skillLevel.toFixed(1)} <span className="text-sm font-semibold text-muted">/ 5</span>
           </p>
         </div>
         <div className="rounded-2xl border border-line bg-card p-4">
-          <p className="text-xs text-muted">🧊 냉장고</p>
+          <p className="text-xs text-muted">냉장고</p>
           <p className="num mt-1.5 text-xl font-extrabold text-ink">
             {fridge.length}개 <span className="text-sm font-semibold text-muted">재료</span>
           </p>

@@ -553,20 +553,8 @@ export const DELIVERY = [
 ]
 
 // ── 냉장고 재료 (초기 상태) ────────────────────────────
-export const INITIAL_FRIDGE = [
-  { id: 'egg', name: '계란', emoji: '🥚', category: '계란/유제품', amount: '많이', qty: '4개' },
-  { id: 'onion', name: '양파', emoji: '🧅', category: '채소', amount: '반 정도', qty: '2개' },
-  { id: 'samgyeop', name: '삼겹살', emoji: '🥩', category: '고기', amount: '많이', qty: '1팩' },
-  { id: 'daepa', name: '대파', emoji: '🥬', category: '채소', amount: '조금', qty: '1대' },
-  { id: 'tofu', name: '두부', emoji: '🧊', category: '계란/유제품', amount: '반 정도', qty: '1모' },
-  { id: 'kimchi', name: '김치', emoji: '🥬', category: '채소', amount: '많이', qty: '1통' },
-  { id: 'milk', name: '우유', emoji: '🥛', category: '계란/유제품', amount: '반 정도', qty: '700ml' },
-  { id: 'garlic', name: '마늘', emoji: '🧄', category: '조미료', amount: '많이', qty: '1줌' },
-  { id: 'potato', name: '감자', emoji: '🥔', category: '채소', amount: '많이', qty: '5개' },
-  { id: 'carrot', name: '당근', emoji: '🥕', category: '채소', amount: '조금', qty: '1개' },
-  { id: 'zucchini', name: '애호박', emoji: '🥒', category: '채소', amount: '반 정도', qty: '1개' },
-  { id: 'mushroom', name: '양송이버섯', emoji: '🍄', category: '채소', amount: '조금', qty: '5개' },
-]
+// 사용자가 직접 입력하도록 기본은 빈 냉장고.
+export const INITIAL_FRIDGE = []
 
 // 재료 추가 시트에서 빠르게 고를 수 있는 카탈로그
 export const INGREDIENT_CATALOG = [

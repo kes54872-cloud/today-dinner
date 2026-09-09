@@ -14,7 +14,8 @@ import {
   WEEK_PLAN,
 } from '../data/mock'
 
-const KEY = 'today-dinner:v1'
+// 버전을 올리면 예전에 브라우저에 저장된 상태를 버리고 새 기본값으로 시작합니다.
+const KEY = 'today-dinner:v2'
 
 const load = () => {
   try {

@@ -54,28 +54,20 @@ export function Icon({ name, size = 22, className = '', strokeWidth = 1.7 }) {
 }
 
 /* ── 음식 이미지 ────────────────────────────────────────
-   외부 사진에 의존하지 않도록 따뜻한 톤 배경 + 큰 emoji.
+   실제 사진이 없을 땐 재료 톤에서 뽑은 차분한 단색 배경만 보여줍니다.
    photo(선택)가 있으면 그 위에 얹고, 로드 실패하면 조용히 배경만 유지. */
-export function FoodImage({ emoji = '🍽️', hue = 24, photo, alt = '', className = '', rounded = 'rounded-2xl' }) {
+export function FoodImage({ hue = 24, photo, alt = '', className = '', rounded = 'rounded-2xl' }) {
   return (
     <div
       className={cx('relative overflow-hidden', rounded, className)}
       style={{
-        background: `linear-gradient(160deg,
-          hsl(${hue} 62% 90%) 0%,
-          hsl(${(hue + 18) % 360} 55% 82%) 60%,
-          hsl(${(hue + 32) % 360} 45% 74%) 100%)`,
+        background: `linear-gradient(180deg,
+          hsl(${hue} 24% 91%) 0%,
+          hsl(${hue} 20% 85%) 100%)`,
       }}
-      role={alt ? 'img' : undefined}
-      aria-label={alt || undefined}
+      role="img"
+      aria-label={alt || '음식 이미지'}
     >
-      <div
-        aria-hidden="true"
-        className="absolute inset-0 flex items-center justify-center select-none"
-        style={{ fontSize: 'clamp(44px, 22%, 108px)', filter: 'saturate(1.05)' }}
-      >
-        {emoji}
-      </div>
       {photo && (
         <img
           src={photo}

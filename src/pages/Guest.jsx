@@ -53,7 +53,7 @@ export default function Guest() {
         <Icon name="back" size={16} /> 홈
       </Link>
       <h1 className="text-2xl font-extrabold text-ink md:text-3xl">
-        🎉 오늘 누가 놀러 오나요?
+        오늘 누가 놀러 오나요?
       </h1>
       <p className="mt-1.5 text-sm text-muted">상황을 알려주면 한 끼 식사 세트로 짜드려요.</p>
 

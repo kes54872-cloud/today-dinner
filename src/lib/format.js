@@ -27,3 +27,24 @@ export const prefMeta = (value) =>
 export const AMOUNT_OPTIONS = ['조금', '반 정도', '많이', '모르겠어요']
 
 export const cx = (...parts) => parts.filter(Boolean).join(' ')
+
+// 메뉴가 쓰는 재료 중 지금 냉장고에 있는 것의 개수
+export const fridgeMatchCount = (menu, fridge) => {
+  if (!menu?.fridgeUse?.length || !fridge?.length) return 0
+  const names = fridge.map((f) => f.name)
+  return menu.fridgeUse.filter((n) =>
+    names.some((fn) => n === fn || n.includes(fn) || fn.includes(n)),
+  ).length
+}
+
+// 추천 이유 — 실제 냉장고 상태에 맞춰 "냉장고" 문구를 보정
+export const explainReasons = (menu, fridge) => {
+  const count = fridgeMatchCount(menu, fridge)
+  return (menu.reasons ?? [])
+    .filter((r) => count > 0 || !r.includes('냉장고'))
+    .map((r) =>
+      count > 0
+        ? r.replace(/냉장고 재료 \d+개/g, `냉장고 재료 ${count}개`)
+        : r,
+    )
+}

@@ -4,13 +4,14 @@ import { PageContainer } from '../components/layout'
 import { MenuCard, RecommendationCard, RecommendationReason } from '../components/cards'
 import { SectionHead, SkeletonCard, Icon } from '../components/ui'
 import { MENUS, INGREDIENT_CATALOG } from '../data/mock'
+import { explainReasons } from '../lib/format'
 import { useApp } from '../store/AppStore'
 
 const MODES = [
-  { key: 'cook', emoji: '🍳', title: '해먹을래', sub: '직접 요리' },
-  { key: 'order', emoji: '🛵', title: '시켜먹을래', sub: '배달 · 포장 · 외식' },
-  { key: 'clear', emoji: '🧊', title: '냉장고 털래', sub: '있는 재료 활용' },
-  { key: 'guest', emoji: '🎉', title: '손님이 와', sub: '여럿이 먹기' },
+  { key: 'cook', title: '해먹을래', sub: '직접 요리' },
+  { key: 'order', title: '시켜먹을래', sub: '배달 · 포장 · 외식' },
+  { key: 'clear', title: '냉장고 털래', sub: '있는 재료 활용' },
+  { key: 'guest', title: '손님이 와', sub: '여럿이 먹기' },
 ]
 
 function QuickAsk() {
@@ -25,7 +26,7 @@ function QuickAsk() {
   return (
     <div className="flex flex-wrap items-center gap-3 rounded-2xl border border-line bg-card p-4">
       <p className="text-sm font-medium text-ink">
-        <span aria-hidden="true">{item.emoji}</span> 냉장고에 {item.name}이(가) 있나요?
+        냉장고에 {item.name} 있나요?
       </p>
       <div className="ml-auto flex gap-2">
         <button
@@ -54,6 +55,7 @@ function QuickAsk() {
 
 export default function Home() {
   const navigate = useNavigate()
+  const { fridge } = useApp()
   const [loading, setLoading] = useState(true)
   useEffect(() => {
     const t = setTimeout(() => setLoading(false), 550)
@@ -83,13 +85,17 @@ export default function Home() {
             key={m.key}
             onClick={() => navigate(`/recommend/${m.key}`)}
             style={{ animationDelay: `${i * 45}ms` }}
-            className="animate-rise flex flex-col items-start gap-1 rounded-[var(--radius-card)] border border-line bg-card p-4 text-left shadow-[var(--shadow-card)] transition-transform hover:-translate-y-1 hover:border-primary/40 active:scale-[0.98] md:p-5"
+            className="animate-rise group flex flex-col items-start rounded-[var(--radius-card)] border border-line bg-card p-4 text-left shadow-[var(--shadow-card)] transition-transform hover:-translate-y-1 hover:border-primary/40 active:scale-[0.98] md:p-5"
           >
-            <span className="text-3xl md:text-4xl" aria-hidden="true">
-              {m.emoji}
+            <span className="flex w-full items-center justify-between">
+              <span className="text-base font-bold text-ink md:text-lg">{m.title}</span>
+              <Icon
+                name="arrowRight"
+                size={18}
+                className="text-line-strong transition-colors group-hover:text-primary"
+              />
             </span>
-            <span className="mt-2 text-[15px] font-bold text-ink md:text-base">{m.title}</span>
-            <span className="text-xs text-muted md:text-sm">{m.sub}</span>
+            <span className="mt-1 text-xs text-muted md:text-sm">{m.sub}</span>
           </button>
         ))}
       </section>
@@ -109,7 +115,7 @@ export default function Home() {
         ) : (
           <div className="animate-fade-in space-y-4">
             <RecommendationCard menu={pick} />
-            <RecommendationReason reasons={pick.reasons} />
+            <RecommendationReason reasons={explainReasons(pick, fridge)} />
           </div>
         )}
       </section>
