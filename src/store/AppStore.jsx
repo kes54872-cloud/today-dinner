@@ -36,18 +36,29 @@ export function AppProvider({ children }) {
   const [week, setWeek] = useState(saved0.week ?? WEEK_PLAN)
   // { [ingredientId]: { [contextKey]: value } }
   const [prefs, setPrefs] = useState(saved0.prefs ?? {})
+  // 사용자가 직접 추가한 편식 재료: [{ id, name }]
+  const [customPrefItems, setCustomPrefItems] = useState(
+    saved0.customPrefItems ?? [],
+  )
   const [toasts, setToasts] = useState([])
 
   useEffect(() => {
     try {
       localStorage.setItem(
         KEY,
-        JSON.stringify({ fridge, savedIds, recipes, week, prefs }),
+        JSON.stringify({
+          fridge,
+          savedIds,
+          recipes,
+          week,
+          prefs,
+          customPrefItems,
+        }),
       )
     } catch {
       /* 저장 실패는 조용히 무시 (프라이빗 모드 등) */
     }
-  }, [fridge, savedIds, recipes, week, prefs])
+  }, [fridge, savedIds, recipes, week, prefs, customPrefItems])
 
   const toast = useCallback((message, opts = {}) => {
     const id = Math.random().toString(36).slice(2)
@@ -112,6 +123,26 @@ export function AppProvider({ children }) {
     }))
   }, [])
 
+  const addPrefItem = useCallback(
+    (name) => {
+      const id = 'cp-' + name
+      setCustomPrefItems((list) =>
+        list.some((x) => x.id === id) ? list : [...list, { id, name }],
+      )
+      toast(`"${name}" 추가`)
+    },
+    [toast],
+  )
+
+  const removePrefItem = useCallback((id) => {
+    setCustomPrefItems((list) => list.filter((x) => x.id !== id))
+    setPrefs((p) => {
+      const next = { ...p }
+      delete next[id]
+      return next
+    })
+  }, [])
+
   // 재료의 특정 상황 선호도 (사용자 오버라이드 우선, 없으면 mock 기본값)
   const getPref = useCallback(
     (ingredientId, contextKey) => {
@@ -139,6 +170,7 @@ export function AppProvider({ children }) {
     setRecipes(MY_RECIPES)
     setWeek(WEEK_PLAN)
     setPrefs({})
+    setCustomPrefItems([])
     toast('처음 상태로 되돌렸어요')
   }, [toast])
 
@@ -148,6 +180,7 @@ export function AppProvider({ children }) {
     recipes,
     week,
     prefs,
+    customPrefItems,
     toasts,
     toast,
     isSaved,
@@ -159,6 +192,8 @@ export function AppProvider({ children }) {
     removeRecipe,
     setPref,
     getPref,
+    addPrefItem,
+    removePrefItem,
     setDay,
     skillLevel,
     resetAll,

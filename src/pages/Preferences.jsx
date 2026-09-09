@@ -1,10 +1,11 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { PageContainer } from '../components/layout'
 import { PreferenceSelector } from '../components/PreferenceSelector'
-import { EmptyState, Icon } from '../components/ui'
+import { BottomSheet } from '../components/overlays'
+import { Button, EmptyState, Icon } from '../components/ui'
 import { cx } from '../lib/format'
-import { PREFERENCE_ITEMS } from '../data/mock'
+import { GENERIC_PREF_CONTEXTS, PREFERENCE_ITEMS } from '../data/mock'
 import { useApp } from '../store/AppStore'
 
 const DISLIKE_REASONS = [
@@ -14,7 +15,52 @@ const DISLIKE_REASONS = [
   '크게 들어간 게 싫어요',
 ]
 
+function AddPrefSheet({ open, onClose }) {
+  const { addPrefItem } = useApp()
+  const [name, setName] = useState('')
+  const close = () => {
+    setName('')
+    onClose()
+  }
+  const submit = () => {
+    if (!name.trim()) return
+    addPrefItem(name.trim())
+    close()
+  }
+  return (
+    <BottomSheet
+      open={open}
+      onClose={close}
+      title="편식 재료 추가"
+      footer={
+        <Button className="w-full" onClick={submit} disabled={!name.trim()}>
+          추가하기
+        </Button>
+      }
+    >
+      <label className="block">
+        <span className="text-sm font-medium text-ink">재료 이름</span>
+        <input
+          autoFocus
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          onKeyDown={(e) => e.key === 'Enter' && submit()}
+          placeholder="예: 가지, 쪽파, 셀러리"
+          className="mt-1.5 w-full rounded-xl border border-line bg-bg px-3.5 py-3 text-sm outline-none focus:border-primary"
+        />
+      </label>
+      <p className="mt-3 text-xs leading-relaxed text-muted">
+        추가하면 생으로 / 익혀서 / 잘게 들어간 것 등 먹는 방식별로 선호도를
+        설정할 수 있어요.
+      </p>
+    </BottomSheet>
+  )
+}
+
 export function Preferences() {
+  const { customPrefItems, removePrefItem } = useApp()
+  const [sheet, setSheet] = useState(false)
+
   return (
     <PageContainer width="narrow">
       <h1 className="text-2xl font-extrabold text-ink md:text-3xl">
@@ -49,7 +95,40 @@ export function Preferences() {
             </Link>
           </li>
         ))}
+
+        {customPrefItems.map((it) => (
+          <li key={it.id} className="flex items-stretch gap-2">
+            <Link
+              to={`/my/preferences/${it.id}`}
+              className="flex flex-1 items-center gap-3.5 rounded-2xl border border-line bg-card p-4 hover:border-primary/40"
+            >
+              <span className="min-w-0 flex-1">
+                <span className="block text-sm font-bold text-ink">
+                  {it.name}
+                </span>
+                <span className="block truncate text-xs text-muted">
+                  먹는 방식별 선호도 설정
+                </span>
+              </span>
+              <Icon name="chevronRight" size={18} className="text-muted" />
+            </Link>
+            <button
+              onClick={() => removePrefItem(it.id)}
+              aria-label={`${it.name} 삭제`}
+              className="grid w-11 shrink-0 place-items-center rounded-2xl border border-line text-muted hover:border-line-strong hover:text-ink"
+            >
+              <Icon name="trash" size={16} />
+            </button>
+          </li>
+        ))}
       </ul>
+
+      <button
+        onClick={() => setSheet(true)}
+        className="mt-3 flex w-full items-center justify-center gap-1.5 rounded-2xl border border-dashed border-line-strong py-3.5 text-sm font-semibold text-muted hover:border-primary/50 hover:text-primary"
+      >
+        <Icon name="plus" size={16} /> 편식 재료 추가
+      </button>
 
       <Link
         to="/my"
@@ -57,17 +136,25 @@ export function Preferences() {
       >
         <Icon name="back" size={16} /> MY 로 돌아가기
       </Link>
+
+      <AddPrefSheet open={sheet} onClose={() => setSheet(false)} />
     </PageContainer>
   )
 }
 
 export function IngredientPreference() {
   const { id } = useParams()
-  const { getPref, setPref, toast } = useApp()
-  const item = PREFERENCE_ITEMS.find((i) => i.id === id)
+  const { getPref, setPref, toast, customPrefItems } = useApp()
+  const item =
+    PREFERENCE_ITEMS.find((i) => i.id === id) ||
+    customPrefItems.find((i) => i.id === id)
   const [reasons, setReasons] = useState(
     () => new Set(item?.dislikeReasons ?? []),
   )
+  useEffect(() => {
+    setReasons(new Set(item?.dislikeReasons ?? []))
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id])
 
   if (!item) {
     return (
@@ -76,6 +163,8 @@ export function IngredientPreference() {
       </PageContainer>
     )
   }
+
+  const contexts = item.contexts ?? GENERIC_PREF_CONTEXTS
 
   const toggleReason = (r) =>
     setReasons((s) => {
@@ -134,7 +223,7 @@ export function IngredientPreference() {
           좋아해요
         </p>
         <div className="space-y-2.5">
-          {item.contexts.map((c) => (
+          {contexts.map((c) => (
             <PreferenceSelector
               key={c.key}
               label={c.label}

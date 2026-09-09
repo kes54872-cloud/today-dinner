@@ -1083,6 +1083,15 @@ export const PREFERENCE_ITEMS = [
   },
 ]
 
+// 직접 추가한 편식 재료에 기본으로 붙는 "먹는 방식" 목록
+export const GENERIC_PREF_CONTEXTS = [
+  { key: 'raw', label: '생으로', value: 3 },
+  { key: 'cooked', label: '익혀서', value: 3 },
+  { key: 'minced', label: '잘게 들어간 것', value: 3 },
+  { key: 'main', label: '메인 재료일 때', value: 3 },
+  { key: 'sauce', label: '소스·양념에 섞인 것', value: 3 },
+]
+
 // 좋아함 / 피함 요약 (Food Profile)
 export const TASTE_SUMMARY = {
   likes: ['파스타', '한식 덮밥', '매운맛', '국물 요리', '크림 소스'],
