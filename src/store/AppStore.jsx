@@ -7,6 +7,7 @@ import {
   useState,
 } from 'react'
 import {
+  GENERIC_PREF_CONTEXTS,
   INITIAL_FRIDGE,
   INITIAL_SAVED,
   MY_RECIPES,
@@ -164,6 +165,30 @@ export function AppProvider({ children }) {
     return Math.round(avg * 10) / 10
   }, [recipes])
 
+  // 취향 설정 → "좋아하는 것 / 피하고 싶은 것" 요약 (Food Profile 카드)
+  const tasteSummary = useMemo(() => {
+    const items = [
+      ...PREFERENCE_ITEMS,
+      ...customPrefItems.map((c) => ({
+        ...c,
+        contexts: GENERIC_PREF_CONTEXTS,
+      })),
+    ]
+    const likes = []
+    const avoid = []
+    for (const item of items) {
+      for (const c of item.contexts ?? GENERIC_PREF_CONTEXTS) {
+        const v = prefs[item.id]?.[c.key] ?? c.value ?? 3
+        const label = c.label.includes(item.name)
+          ? c.label
+          : `${item.name} ${c.label}`
+        if (v <= 2) avoid.push(label)
+        else if (v >= 5) likes.push(label)
+      }
+    }
+    return { likes, avoid }
+  }, [prefs, customPrefItems])
+
   const resetAll = useCallback(() => {
     setFridge(INITIAL_FRIDGE)
     setSavedIds(INITIAL_SAVED)
@@ -196,6 +221,7 @@ export function AppProvider({ children }) {
     removePrefItem,
     setDay,
     skillLevel,
+    tasteSummary,
     resetAll,
   }
 

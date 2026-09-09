@@ -1092,12 +1092,6 @@ export const GENERIC_PREF_CONTEXTS = [
   { key: 'sauce', label: '소스·양념에 섞인 것', value: 3 },
 ]
 
-// 좋아함 / 피함 요약 (Food Profile)
-export const TASTE_SUMMARY = {
-  likes: ['파스타', '한식 덮밥', '매운맛', '국물 요리', '크림 소스'],
-  avoid: ['생당근', '큰 버섯', '고수', '생파'],
-}
-
 // ── 손님용 세트 결과 ───────────────────────────────────
 export const GUEST_SETS = [
   {

@@ -3,8 +3,14 @@ import { Link } from 'react-router-dom'
 import { PageContainer } from '../components/layout'
 import { ConfirmModal } from '../components/overlays'
 import { Icon } from '../components/ui'
-import { TASTE_SUMMARY } from '../data/mock'
 import { useApp } from '../store/AppStore'
+
+// 요약 카드에 너무 길게 나오지 않도록 최대 6개까지만
+const summaryText = (list) => {
+  if (!list.length) return '아직 설정하지 않았어요'
+  const shown = list.slice(0, 6).join(' · ')
+  return list.length > 6 ? `${shown} 외 ${list.length - 6}개` : shown
+}
 
 const LINKS = [
   {
@@ -28,7 +34,7 @@ const LINKS = [
 ]
 
 export default function My() {
-  const { skillLevel, fridge, savedIds, resetAll } = useApp()
+  const { skillLevel, fridge, savedIds, tasteSummary, resetAll } = useApp()
   const [confirm, setConfirm] = useState(false)
 
   return (
@@ -42,18 +48,24 @@ export default function My() {
 
       {/* 요약 카드 */}
       <div className="mt-5 grid grid-cols-2 gap-3">
-        <div className="rounded-2xl border border-line bg-card p-4">
-          <p className="text-xs text-muted">좋아하는 음식</p>
+        <Link
+          to="/my/preferences"
+          className="rounded-2xl border border-line bg-card p-4 hover:border-primary/40"
+        >
+          <p className="text-xs text-muted">좋아하는 것</p>
           <p className="mt-1.5 text-sm font-semibold leading-relaxed text-ink">
-            {TASTE_SUMMARY.likes.join(' · ')}
+            {summaryText(tasteSummary.likes)}
           </p>
-        </div>
-        <div className="rounded-2xl border border-line bg-card p-4">
+        </Link>
+        <Link
+          to="/my/preferences"
+          className="rounded-2xl border border-line bg-card p-4 hover:border-primary/40"
+        >
           <p className="text-xs text-muted">피하고 싶은 것</p>
           <p className="mt-1.5 text-sm font-semibold leading-relaxed text-ink">
-            {TASTE_SUMMARY.avoid.join(' · ')}
+            {summaryText(tasteSummary.avoid)}
           </p>
-        </div>
+        </Link>
         <div className="rounded-2xl border border-line bg-card p-4">
           <p className="text-xs text-muted">요리 레벨</p>
           <p className="num mt-1.5 text-xl font-extrabold text-ink">
