@@ -84,17 +84,24 @@ export function Chip({
   )
 }
 
-/* ── 난이도 별 ──────────────────────────────────────────*/
+/* ── 난이도 별 (1~3단계, 3 초과는 3으로 표시) ───────────*/
 export function Stars({ level, className = '' }) {
+  const filled = Math.max(0, Math.min(3, level))
+  const beyond = level > 3
   return (
     <span
       className={cx('num tracking-tight text-primary', className)}
       aria-label={`난이도 ${level}단계 (${starText(level)})`}
     >
-      <span aria-hidden="true">{'★'.repeat(level)}</span>
+      <span aria-hidden="true">{'★'.repeat(filled)}</span>
       <span aria-hidden="true" className="text-line-strong">
-        {'★'.repeat(3 - level)}
+        {'★'.repeat(3 - filled)}
       </span>
+      {beyond && (
+        <span aria-hidden="true" className="ml-0.5 text-primary">
+          +
+        </span>
+      )}
     </span>
   )
 }

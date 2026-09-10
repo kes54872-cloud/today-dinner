@@ -4,8 +4,11 @@ export const won = (n) => `${n.toLocaleString('ko-KR')}원`
 
 export const minutes = (n) => `${n}분`
 
-// 난이도 1~3 → 별 문자열 (fallback / aria 용)
-export const starText = (level) => '★★★☆☆☆'.slice(3 - level, 6 - level)
+// 난이도 1~3 → 별 문자열 (fallback / aria 용). 범위를 벗어난 값도 안전하게.
+export const starText = (level) => {
+  const l = Math.max(0, Math.min(3, level))
+  return '★★★☆☆☆'.slice(3 - l, 6 - l)
+}
 
 export const difficultyLabel = (level) =>
   ({ 1: '쉬움', 2: '보통', 3: '도전' })[level] ?? '보통'
