@@ -3,14 +3,18 @@ import { Navigate, useParams, Link } from 'react-router-dom'
 import { PageContainer } from '../components/layout'
 import { MenuCard } from '../components/cards'
 import { Chip, EmptyState, Icon } from '../components/ui'
+import { fridgeMatchCount } from '../lib/format'
 import { MENUS } from '../data/mock'
+import { useApp } from '../store/AppStore'
+
+const SECTION_LIMIT = 9
 const FILTERS = [
   { key: 'quick', label: '20분 이내', test: (m) => m.time <= 20 },
   { key: 'easy', label: '쉬운 요리', test: (m) => m.difficulty <= 2 },
   {
     key: 'fridge',
     label: '냉장고 재료 우선',
-    test: (m) => (m.fridgeUse?.length ?? 0) >= 3,
+    test: (m, matches) => matches >= 2,
   },
   { key: 'new', label: '새로운 요리', test: (m) => m.category === 'new' },
 ]
@@ -29,13 +33,16 @@ const SECTIONS = [
 ]
 export default function Recommend() {
   const { mode } = useParams()
+  const { fridge } = useApp()
   const [active, setActive] = useState([])
   const filtered = useMemo(() => {
     const tests = FILTERS.filter((f) => active.includes(f.key)).map(
       (f) => f.test,
     )
-    return MENUS.filter((m) => tests.every((t) => t(m)))
-  }, [active])
+    return MENUS.map((m) => ({ ...m, matches: fridgeMatchCount(m, fridge) }))
+      .filter((m) => tests.every((t) => t(m, m.matches)))
+      .sort((a, b) => b.matches - a.matches || b.match - a.match)
+  }, [active, fridge])
   if (mode === 'order') return <Navigate to="/delivery" replace />
   if (mode === 'clear') return <Navigate to="/fridge/clear" replace />
   if (mode === 'guest') return <Navigate to="/guest" replace />
@@ -97,13 +104,18 @@ export default function Recommend() {
       ) : (
         <div className="mt-7 space-y-10">
           {SECTIONS.map((s) => {
-            const items = filtered.filter((m) => m.category === s.key)
+            const all = filtered.filter((m) => m.category === s.key)
+            const items = all.slice(0, SECTION_LIMIT)
             if (!items.length) return null
             return (
               <section key={s.key}>
                 <div className="mb-3">
                   <h2 className="text-lg font-bold text-ink">{s.title}</h2>
-                  <p className="mt-0.5 text-sm text-muted">{s.caption}</p>
+                  <p className="mt-0.5 text-sm text-muted">
+                    {s.caption}
+                    {all.length > items.length &&
+                      ` · ${all.length}개 중 ${items.length}개`}
+                  </p>
                 </div>
                 <div className="grid grid-cols-2 gap-3 md:grid-cols-3 md:gap-5 lg:grid-cols-4">
                   {items.map((m) => (

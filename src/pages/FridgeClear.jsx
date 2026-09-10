@@ -11,14 +11,20 @@ export default function FridgeClear() {
   // 냉장고 재료를 많이 쓰는 순으로
   const ranked = useMemo(() => {
     return MENUS.map((m) => {
-      const usedCount = fridge.filter((f) =>
-        menuUsesIngredient(m, f.name),
-      ).length
-      return { ...m, usedCount, buyCount: m.buyExtra.length }
+      const usedNames = fridge
+        .filter((f) => menuUsesIngredient(m, f.name))
+        .map((f) => f.name)
+      return {
+        ...m,
+        usedNames,
+        usedCount: usedNames.length,
+        buyCount: m.buyExtra.length,
+      }
     })
       .filter((m) => m.usedCount > 0)
       .sort((a, b) => b.usedCount - a.usedCount || a.buyCount - b.buyCount)
   }, [fridge])
+  const shown = ranked.slice(0, 15)
   const [selId, setSelId] = useState(ranked[0]?.id)
   const sel = ranked.find((m) => m.id === selId) ?? ranked[0]
   const usePct = sel && total ? Math.round((sel.usedCount / total) * 100) : 0
@@ -71,16 +77,19 @@ export default function FridgeClear() {
         )}
       </div>
       {/* 메뉴 목록 */}
-      <h2 className="mb-3 mt-8 text-lg font-bold text-ink">
+      <h2 className="mb-1 mt-8 text-lg font-bold text-ink">
         가장 많이 활용할 수 있는 메뉴
       </h2>
+      <p className="mb-3 text-xs text-muted">
+        지금 재료를 쓸 수 있는 메뉴 {ranked.length}개 중 상위 {shown.length}개
+      </p>
       <ul className="space-y-2.5">
-        {ranked.map((m) => (
+        {shown.map((m) => (
           <li key={m.id}>
             <button
               onClick={() => setSelId(m.id)}
               className={cx(
-                'flex w-full items-center gap-3 rounded-2xl border bg-card p-3.5 text-left transition-colors',
+                'flex w-full items-start gap-3 rounded-2xl border bg-card p-3.5 text-left transition-colors',
                 selId === m.id
                   ? 'border-primary ring-1 ring-primary/30'
                   : 'border-line hover:border-line-strong',
@@ -90,23 +99,24 @@ export default function FridgeClear() {
                 <p className="truncate text-sm font-bold text-ink">{m.name}</p>
                 <p className="num mt-0.5 text-xs text-muted">
                   {minutes(m.time)}
+                  {m.buyCount > 0 && ` · 추가 구매 ${m.buyCount}개`}
                 </p>
-                <p className="mt-1 flex flex-wrap gap-1.5 text-xs">
-                  <span className="rounded-md bg-ok-soft px-1.5 py-0.5 font-medium text-ok">
-                    사용 재료 {m.usedCount}개
-                  </span>
-                  {m.buyCount > 0 && (
-                    <span className="rounded-md border border-line px-1.5 py-0.5 text-muted">
-                      추가 구매 {m.buyCount}개
+                <p className="mt-1.5 flex flex-wrap gap-1">
+                  {m.usedNames.map((n) => (
+                    <span
+                      key={n}
+                      className="rounded-md bg-ok-soft px-1.5 py-0.5 text-[11px] font-medium text-ok"
+                    >
+                      {n}
                     </span>
-                  )}
+                  ))}
                 </p>
               </div>
               <Link
                 to={`/menu/${m.id}`}
                 aria-label={`${m.name} 레시피`}
                 onClick={(e) => e.stopPropagation()}
-                className="shrink-0 text-muted hover:text-ink"
+                className="mt-0.5 shrink-0 text-muted hover:text-ink"
               >
                 <Icon name="chevronRight" size={18} />
               </Link>
